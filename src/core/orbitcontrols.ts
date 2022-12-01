@@ -27,6 +27,7 @@ export class OrbitControls {
         } else {
             position.sub(target).scale(0.8).add(target);
         }
+        this.camera.updateModelMatrix();
     };
 
     private _onDragStart = (e: MouseEvent) => {
@@ -57,6 +58,8 @@ export class OrbitControls {
             up.applyAxisAngle(yAxis, rotateY);
 
             position.add(target);
+
+            this.camera.updateModelMatrix();
         } else if (buttons & MouseButton.RIGHT) {
             const vDepth = zAxis.setLength(-deltaY);
             position.add(vDepth);
@@ -65,6 +68,8 @@ export class OrbitControls {
             const vHorizontal = xAxis.setLength(-deltaX);
             position.add(vHorizontal);
             target.add(vHorizontal);
+
+            this.camera.updateModelMatrix();
         }
 
         this._lastMouse[0] = offsetX;
