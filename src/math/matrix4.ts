@@ -335,8 +335,8 @@ export class Matrix4 extends Array<number> {
     }
 
     public makePerspective(fov: number, aspect: number, near: number, far: number) {
-        var f = Math.tan(((180 - fov) * Math.PI) / 360);
-        var rangeInv = 1.0 / (near - far);
+        var f = 1 / Math.tan(fov / 2);
+        var rangeInv = 1 / (near - far);
         this[0] = f / aspect;
         this[4] = 0;
         this[8] = 0;

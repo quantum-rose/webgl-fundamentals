@@ -19,6 +19,6 @@ export class PerspectiveCamera extends Camera {
     }
 
     public updateProjectionMatrix() {
-        this.projectionMatrix.makePerspective(this.fov, this.aspect, this.near, this.far);
+        this.projectionMatrix.makePerspective((this.fov * Math.PI) / 180, this.aspect, this.near, this.far);
     }
 }
