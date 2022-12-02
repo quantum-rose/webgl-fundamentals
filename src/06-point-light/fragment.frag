@@ -29,9 +29,9 @@ void main() {
 
     vec3 dir = (u_viewMatrix * vec4(u_pointLightPosition, 1.0)).xyz - v_pos;
     dir = normalize(dir);
-    float light = max(dot(normal, dir), 0.0);
+    float diffuse = max(dot(normal, dir), 0.0);
     float specular = getSpecular(dir, normal, eyeDir);
 
-    gl_FragColor.rgb = v_color.rgb * (u_ambientLightColor + light) + specular;
+    gl_FragColor.rgb = v_color.rgb * (u_ambientLightColor + diffuse) + specular;
     gl_FragColor.a = v_color.a;
 }
