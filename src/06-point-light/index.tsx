@@ -104,7 +104,7 @@ function useWebGL() {
             gl.uniformMatrix4fv(normalMatrixUniformLocation, false, modelViewMatrix.clone().invert().transpose());
 
             // u_ambientLightColor
-            gl.uniform3f(ambientLightColorUniformLocation, 0, 0, 0);
+            gl.uniform3f(ambientLightColorUniformLocation, 0.1, 0.1, 0.1);
 
             // u_pointLightPosition
             gl.uniform3f(pointLightPositionUniformLocation, -10, 0, 60);
