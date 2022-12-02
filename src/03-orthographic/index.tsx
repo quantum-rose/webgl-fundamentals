@@ -64,9 +64,9 @@ function useWebGL() {
         // 对于线性变换，变换前后面积/体积不会改变，行列式的绝对值始终为 1，但是有正负之分（翻转后三角形三个点顺逆关系改变）
         gl.frontFace(fModelMatrix.determinant() > 0 ? gl.CCW : gl.CW);
         const setUMatrix = function () {
-            camera.updateModelMatrix();
-            const { projectionMatrix, modelMatrix } = camera;
-            const viewMatrix = modelMatrix.clone().invert();
+            camera.updateMatrixWorld();
+            const { projectionMatrix, matrixWorld } = camera;
+            const viewMatrix = matrixWorld.clone().invert();
             // MVP 矩阵，依次左乘，注意相乘顺序，ProjectionMatrix × ViewMatrix × ModelMatrix
             gl.uniformMatrix4fv(matrixUniformLocation, false, viewMatrix.multiply(fModelMatrix).premultiply(projectionMatrix));
         };
@@ -116,9 +116,9 @@ export default function Orthographic() {
         const deltaX = offsetX - lastMouse.current.x;
         const deltaY = offsetY - lastMouse.current.y;
 
-        const { position, target, up, modelMatrix } = cameraRef.current;
-        const xAxis = new Vector3().setFromMatrixColumn(modelMatrix, 0);
-        const yAxis = new Vector3().setFromMatrixColumn(modelMatrix, 1);
+        const { position, target, up, matrixWorld } = cameraRef.current;
+        const xAxis = new Vector3().setFromMatrixColumn(matrixWorld, 0);
+        const yAxis = new Vector3().setFromMatrixColumn(matrixWorld, 1);
 
         if (buttons & MouseButton.LEFT) {
             position.sub(target);

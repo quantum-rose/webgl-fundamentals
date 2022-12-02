@@ -27,7 +27,7 @@ export class OrbitControls {
         } else {
             position.sub(target).scale(0.8).add(target);
         }
-        this.camera.updateModelMatrix();
+        this.camera.updateMatrixWorld();
     };
 
     private _onDragStart = (e: MouseEvent) => {
@@ -41,10 +41,10 @@ export class OrbitControls {
         const deltaX = offsetX - this._lastMouse[0];
         const deltaY = offsetY - this._lastMouse[1];
 
-        const { position, target, up, modelMatrix } = this.camera;
-        const xAxis = new Vector3().setFromMatrixColumn(modelMatrix, 0);
-        const yAxis = new Vector3().setFromMatrixColumn(modelMatrix, 1);
-        const zAxis = new Vector3().setFromMatrixColumn(modelMatrix, 2);
+        const { position, target, up, matrixWorld } = this.camera;
+        const xAxis = new Vector3().setFromMatrixColumn(matrixWorld, 0);
+        const yAxis = new Vector3().setFromMatrixColumn(matrixWorld, 1);
+        const zAxis = new Vector3().setFromMatrixColumn(matrixWorld, 2);
 
         if (buttons & MouseButton.LEFT) {
             position.sub(target);
@@ -59,7 +59,7 @@ export class OrbitControls {
 
             position.add(target);
 
-            this.camera.updateModelMatrix();
+            this.camera.updateMatrixWorld();
         } else if (buttons & MouseButton.RIGHT) {
             const vDepth = zAxis.setLength(-deltaY);
             position.add(vDepth);
@@ -69,7 +69,7 @@ export class OrbitControls {
             position.add(vHorizontal);
             target.add(vHorizontal);
 
-            this.camera.updateModelMatrix();
+            this.camera.updateMatrixWorld();
         }
 
         this._lastMouse[0] = offsetX;

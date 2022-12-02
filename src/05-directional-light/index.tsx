@@ -68,7 +68,7 @@ function useWebGL() {
         camera.position.set(0, 0, 400);
         camera.position.applyAxisAngle([0, 1, 0], Math.PI / 6);
         camera.position.applyAxisAngle([1, 0, 0], -Math.PI / 6);
-        camera.updateModelMatrix();
+        camera.updateMatrixWorld();
 
         // controls
         const controls = new OrbitControls(camera, canvas);
@@ -82,7 +82,7 @@ function useWebGL() {
             gl.frontFace(modelMatrix.determinant() > 0 ? gl.CCW : gl.CW);
 
             // u_viewMatrix
-            gl.uniformMatrix4fv(viewMatrixUniformLocation, false, camera.modelMatrix.clone().invert());
+            gl.uniformMatrix4fv(viewMatrixUniformLocation, false, camera.matrixWorld.clone().invert());
 
             // u_ProjectionMatrix;
             gl.uniformMatrix4fv(projectionMatrixUniformLocation, false, camera.projectionMatrix);

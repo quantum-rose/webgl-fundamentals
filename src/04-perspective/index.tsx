@@ -58,9 +58,9 @@ function useWebGL() {
         fModelMatrix.translate(-50, 75, -15);
         gl.frontFace(fModelMatrix.determinant() > 0 ? gl.CCW : gl.CW);
         const setUMatrix = function () {
-            camera.updateModelMatrix();
-            const { projectionMatrix, modelMatrix } = camera;
-            const viewMatrix = modelMatrix.clone().invert();
+            camera.updateMatrixWorld();
+            const { projectionMatrix, matrixWorld } = camera;
+            const viewMatrix = matrixWorld.clone().invert();
             gl.uniformMatrix4fv(matrixUniformLocation, false, viewMatrix.multiply(fModelMatrix).premultiply(projectionMatrix));
         };
         setUMatrix();
@@ -109,10 +109,10 @@ export default function Perspective() {
         const deltaX = offsetX - lastMouse.current.x;
         const deltaY = offsetY - lastMouse.current.y;
 
-        const { position, target, up, modelMatrix } = cameraRef.current;
-        const xAxis = new Vector3().setFromMatrixColumn(modelMatrix, 0);
-        const yAxis = new Vector3().setFromMatrixColumn(modelMatrix, 1);
-        const zAxis = new Vector3().setFromMatrixColumn(modelMatrix, 2);
+        const { position, target, up, matrixWorld } = cameraRef.current;
+        const xAxis = new Vector3().setFromMatrixColumn(matrixWorld, 0);
+        const yAxis = new Vector3().setFromMatrixColumn(matrixWorld, 1);
+        const zAxis = new Vector3().setFromMatrixColumn(matrixWorld, 2);
 
         if (buttons & MouseButton.LEFT) {
             position.sub(target);

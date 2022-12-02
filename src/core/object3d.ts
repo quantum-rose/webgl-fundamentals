@@ -7,10 +7,10 @@ export class Object3D {
 
     public up = new Vector3(0, 1, 0);
 
-    public modelMatrix = new Matrix4();
+    public matrixWorld = new Matrix4();
 
     constructor() {
-        this.updateModelMatrix();
+        this.updateMatrixWorld();
     }
 
     public lookAt(v: number[]): this;
@@ -21,15 +21,15 @@ export class Object3D {
         } else {
             this.target.copy(x);
         }
-        this.updateModelMatrix();
+        this.updateMatrixWorld();
         return this;
     }
 
-    public updateModelMatrix() {
+    public updateMatrixWorld() {
         const zAxis = this.position.clone().sub(this.target).normalize();
         const xAxis = this.up.clone().cross(zAxis).normalize();
         const yAxis = zAxis.clone().cross(xAxis);
-        this.modelMatrix.makeBasis(xAxis, yAxis, zAxis);
-        this.modelMatrix.setPosition(this.position);
+        this.matrixWorld.makeBasis(xAxis, yAxis, zAxis);
+        this.matrixWorld.setPosition(this.position);
     }
 }
