@@ -4,6 +4,7 @@ import ImageProcess from './02-image-process';
 import Orthographic from './03-orthographic';
 import Perspective from './04-perspective';
 import DirectionalLight from './05-directional-light';
+import PointLight from './06-point-light';
 import './App.css';
 
 interface Menu {
@@ -37,6 +38,11 @@ const Menu: Menu[] = [
         id: 4,
         name: 'Directional Light',
         component: DirectionalLight,
+    },
+    {
+        id: 5,
+        name: 'Point Light',
+        component: PointLight,
     },
 ];
 
