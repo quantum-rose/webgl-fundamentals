@@ -24,6 +24,7 @@ function useWebGL() {
         const resolutionUniformLocation = gl.getUniformLocation(program, 'u_resolution');
         const modelMatrixUniformLocation = gl.getUniformLocation(program, 'u_modelMatrix');
         const viewMatrixUniformLocation = gl.getUniformLocation(program, 'u_viewMatrix');
+        const modelViewMatrixUniformLocation = gl.getUniformLocation(program, 'u_modelViewMatrix');
         const projectionMatrixUniformLocation = gl.getUniformLocation(program, 'u_projectionMatrix');
         const normalMatrixUniformLocation = gl.getUniformLocation(program, 'u_normalMatrix');
         const ambientLightColorUniformLocation = gl.getUniformLocation(program, 'u_ambientLightColor');
@@ -59,9 +60,9 @@ function useWebGL() {
         gl.vertexAttribPointer(normalAttributeLocation, 3, gl.FLOAT, false, 0, 0);
 
         // like mesh
-        const modelMatrix = new Matrix4();
-        modelMatrix.scale(1, -1, 1);
-        modelMatrix.translate(-50, 75, -15);
+        const objectMatrixWorld = new Matrix4();
+        objectMatrixWorld.scale(1, -1, 1);
+        objectMatrixWorld.translate(-50, 75, -15);
 
         // camera
         const camera = new PerspectiveCamera(70, canvas.clientWidth / canvas.clientHeight, 1, 800);
@@ -78,17 +79,25 @@ function useWebGL() {
             gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
 
             // u_modelMatrix
+            const modelMatrix = objectMatrixWorld;
             gl.uniformMatrix4fv(modelMatrixUniformLocation, false, modelMatrix);
             gl.frontFace(modelMatrix.determinant() > 0 ? gl.CCW : gl.CW);
 
             // u_viewMatrix
-            gl.uniformMatrix4fv(viewMatrixUniformLocation, false, camera.matrixWorld.clone().invert());
+            const viewMatrix = camera.matrixWorld.clone().invert();
+            gl.uniformMatrix4fv(viewMatrixUniformLocation, false, viewMatrix);
+
+            // u_modelViewMatrix
+            const modelViewMatrix = viewMatrix.clone().multiply(modelMatrix);
+            gl.uniformMatrix4fv(modelViewMatrixUniformLocation, false, modelViewMatrix);
 
             // u_ProjectionMatrix;
             gl.uniformMatrix4fv(projectionMatrixUniformLocation, false, camera.projectionMatrix);
 
             // u_normalMatrix
-            gl.uniformMatrix4fv(normalMatrixUniformLocation, false, modelMatrix.clone().invert().transpose());
+            // 注意，与 https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-3d-lighting-directional.html 不同的是，这里使用 modelViewMatrix 来计算 normalMatrix
+            // 这也是 threejs 的做法，因此在计算光照方向时，还需要乘上 viewMatrix，详见 ./fragment.frag
+            gl.uniformMatrix4fv(normalMatrixUniformLocation, false, modelViewMatrix.clone().invert().transpose());
 
             // u_ambientLightColor
             gl.uniform3f(ambientLightColorUniformLocation, 0.1, 0.1, 0.1);
@@ -98,7 +107,7 @@ function useWebGL() {
         }
 
         const render = () => {
-            modelMatrix.rotateY(0.01);
+            objectMatrixWorld.rotateY(0.01);
 
             setUniforms(gl);
 
