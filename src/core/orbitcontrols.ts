@@ -1,22 +1,32 @@
-import { MouseButton } from '../interfaces';
+import { MouseButton } from '../constants';
 import { Vector3 } from '../math';
 import { Camera } from './camera';
 
 export class OrbitControls {
+    private static _xAxis = new Vector3();
+
+    private static _yAxis = new Vector3();
+
+    private static _zAxis = new Vector3();
+
     public camera: Camera;
 
     public domElement: HTMLElement;
 
-    private _lastMouse: [number, number] = [0, 0];
+    private _lastMouse: [number, number];
 
     constructor(camera: Camera, domElement?: HTMLElement) {
         this.camera = camera;
         this.domElement = domElement ?? document.documentElement;
 
-        this.domElement.addEventListener('wheel', this._onWheel);
+        this.domElement.addEventListener('wheel', this._onWheel, { passive: true });
         this.domElement.addEventListener('mousedown', this._onDragStart);
         this.domElement.addEventListener('mouseup', this._onDragEnd);
         this.domElement.addEventListener('contextmenu', this._onContextMenu);
+
+        this._lastMouse = [0, 0];
+
+        this.camera.lookAt(camera.target);
     }
 
     private _onWheel = (e: WheelEvent) => {
@@ -27,7 +37,6 @@ export class OrbitControls {
         } else {
             position.sub(target).scale(0.8).add(target);
         }
-        this.camera.updateMatrixWorld();
     };
 
     private _onDragStart = (e: MouseEvent) => {
@@ -42,34 +51,34 @@ export class OrbitControls {
         const deltaY = offsetY - this._lastMouse[1];
 
         const { position, target, up, matrixWorld } = this.camera;
-        const xAxis = new Vector3().setFromMatrixColumn(matrixWorld, 0);
-        const yAxis = new Vector3().setFromMatrixColumn(matrixWorld, 1);
-        const zAxis = new Vector3().setFromMatrixColumn(matrixWorld, 2);
+        OrbitControls._xAxis.setFromMatrix4Column(matrixWorld, 0);
+        OrbitControls._yAxis.setFromMatrix4Column(matrixWorld, 1);
+        OrbitControls._zAxis.setFromMatrix4Column(matrixWorld, 2);
 
         if (buttons & MouseButton.LEFT) {
             position.sub(target);
 
             const rotateX = -deltaY * 0.01;
-            position.applyAxisAngle(xAxis, rotateX);
-            up.applyAxisAngle(xAxis, rotateX);
+            position.applyAxisAngle(OrbitControls._xAxis, rotateX);
+            up.applyAxisAngle(OrbitControls._xAxis, rotateX);
 
             const rotateY = -deltaX * 0.01;
-            position.applyAxisAngle(yAxis, rotateY);
-            up.applyAxisAngle(yAxis, rotateY);
+            position.applyAxisAngle(OrbitControls._yAxis, rotateY);
+            up.applyAxisAngle(OrbitControls._yAxis, rotateY);
 
             position.add(target);
 
-            this.camera.updateMatrixWorld();
+            this.camera.lookAt(target);
         } else if (buttons & MouseButton.RIGHT) {
-            const vDepth = zAxis.setLength(-deltaY);
+            const vDepth = OrbitControls._zAxis.setLength(-deltaY);
             position.add(vDepth);
             target.add(vDepth);
 
-            const vHorizontal = xAxis.setLength(-deltaX);
+            const vHorizontal = OrbitControls._xAxis.setLength(-deltaX);
             position.add(vHorizontal);
             target.add(vHorizontal);
 
-            this.camera.updateMatrixWorld();
+            this.camera.lookAt(target);
         }
 
         this._lastMouse[0] = offsetX;

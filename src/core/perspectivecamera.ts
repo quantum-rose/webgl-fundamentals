@@ -1,6 +1,11 @@
+import { Object3DClass } from '../constants';
 import { Camera } from './camera';
 
 export class PerspectiveCamera extends Camera {
+    public static classId = Object3DClass.PerspectiveCamera;
+
+    public classId = PerspectiveCamera.classId;
+
     public fov: number;
 
     public aspect: number;

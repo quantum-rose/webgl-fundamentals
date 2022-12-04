@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { PerspectiveCamera } from '../core';
-import { OrbitControls } from '../core/orbitcontrols';
+import { OrbitControls, PerspectiveCamera } from '../core';
 import { Matrix4 } from '../math';
 import { WebGLUtils } from '../utils/webglutils';
 import fragment from './fragment.frag';
@@ -69,7 +68,6 @@ function useWebGL() {
         camera.position.set(0, 0, 400);
         camera.position.applyAxisAngle([0, 1, 0], Math.PI / 6);
         camera.position.applyAxisAngle([1, 0, 0], -Math.PI / 6);
-        camera.updateMatrixWorld();
 
         // controls
         const controls = new OrbitControls(camera, canvas);
@@ -108,6 +106,8 @@ function useWebGL() {
 
         const render = () => {
             objectMatrixWorld.rotateY(0.01);
+
+            camera.updateMatrixWorld();
 
             setUniforms(gl);
 

@@ -6,6 +6,7 @@ import DirectionalLight from './05-directional-light';
 import PointLight from './06-point-light';
 import SpotLight from './07-spot-light';
 import SearchLight from './08-search-light';
+import LessCodeMoreFun from './09-less-code-more-fun';
 
 export interface Menu {
     id: number;
@@ -53,5 +54,10 @@ export const MenuConfig: Menu[] = [
         id: 7,
         name: 'Search Light',
         component: SearchLight,
+    },
+    {
+        id: 8,
+        name: 'Less Code More Fun',
+        component: LessCodeMoreFun,
     },
 ];

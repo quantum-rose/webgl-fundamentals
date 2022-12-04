@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
+import { MouseButton } from '../constants';
 import { OrthographicCamera } from '../core';
-import { MouseButton } from '../interfaces';
 import { Matrix4, Vector3 } from '../math';
 import { WebGLUtils } from '../utils/webglutils';
 import fragment from './fragment.frag';
@@ -117,8 +117,8 @@ export default function Orthographic() {
         const deltaY = offsetY - lastMouse.current.y;
 
         const { position, target, up, matrixWorld } = cameraRef.current;
-        const xAxis = new Vector3().setFromMatrixColumn(matrixWorld, 0);
-        const yAxis = new Vector3().setFromMatrixColumn(matrixWorld, 1);
+        const xAxis = new Vector3().setFromMatrix4Column(matrixWorld, 0);
+        const yAxis = new Vector3().setFromMatrix4Column(matrixWorld, 1);
 
         if (buttons & MouseButton.LEFT) {
             position.sub(target);
@@ -133,6 +133,7 @@ export default function Orthographic() {
 
             position.add(target);
 
+            cameraRef.current.lookAt(target);
             updateRef.current();
         } else if (buttons & MouseButton.RIGHT) {
             const vVertical = yAxis.setLength(deltaY);
@@ -143,6 +144,7 @@ export default function Orthographic() {
             position.add(vHorizontal);
             target.add(vHorizontal);
 
+            cameraRef.current.lookAt(target);
             updateRef.current();
         }
 

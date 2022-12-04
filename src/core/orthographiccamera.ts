@@ -1,6 +1,11 @@
+import { Object3DClass } from '../constants';
 import { Camera } from './camera';
 
 export class OrthographicCamera extends Camera {
+    public static classId = Object3DClass.OrthographicCamera;
+
+    public classId = OrthographicCamera.classId;
+
     public left: number;
 
     public right: number;
