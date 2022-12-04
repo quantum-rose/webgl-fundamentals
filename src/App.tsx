@@ -1,64 +1,14 @@
 import { useState } from 'react';
-import HelloWebGL from './01-hello-webgl';
-import ImageProcess from './02-image-process';
-import Orthographic from './03-orthographic';
-import Perspective from './04-perspective';
-import DirectionalLight from './05-directional-light';
-import PointLight from './06-point-light';
-import SpotLight from './07-spot-light';
 import './App.css';
-
-interface Menu {
-    id: number;
-    name: string;
-    component: () => JSX.Element;
-}
-
-const Menu: Menu[] = [
-    {
-        id: 0,
-        name: 'Hello WebGL',
-        component: HelloWebGL,
-    },
-    {
-        id: 1,
-        name: 'Image Process',
-        component: ImageProcess,
-    },
-    {
-        id: 2,
-        name: 'Orthographic',
-        component: Orthographic,
-    },
-    {
-        id: 3,
-        name: 'Perspective',
-        component: Perspective,
-    },
-    {
-        id: 4,
-        name: 'Directional Light',
-        component: DirectionalLight,
-    },
-    {
-        id: 5,
-        name: 'Point Light',
-        component: PointLight,
-    },
-    {
-        id: 6,
-        name: 'Spot Light',
-        component: SpotLight,
-    },
-];
+import { Menu, MenuConfig } from './menuconfig';
 
 const MenuLocalStorageKey = 'WebGlFundamentalsMenu';
-let defaultMenu = Menu[0];
+let defaultMenu = MenuConfig[0];
 
 const data = window.localStorage.getItem(MenuLocalStorageKey);
 if (data) {
     const menuId = JSON.parse(data) as number;
-    const menuInfo = Menu.find(item => item.id === menuId);
+    const menuInfo = MenuConfig.find(item => item.id === menuId);
     if (menuInfo) {
         defaultMenu = menuInfo;
     }
@@ -75,7 +25,7 @@ function App() {
     return (
         <div className='App'>
             <ul className='menu'>
-                {Menu.map((item, idx) => (
+                {MenuConfig.map((item, idx) => (
                     <li key={item.id} className={`menu-item${menu.id === item.id ? ' selected' : ''}`} onClick={() => handleClickMenu(item)}>
                         {`${idx + 1}. ${item.name}`}
                     </li>
