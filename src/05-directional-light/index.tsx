@@ -104,6 +104,8 @@ function useWebGL() {
             gl.uniform3f(reverseLightDirectionUniformLocation, 0, 0, 1);
         }
 
+        let requestId: number | null = null;
+
         const render = () => {
             objectMatrixWorld.rotateY(0.01);
 
@@ -114,10 +116,16 @@ function useWebGL() {
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
             gl.drawArrays(gl.TRIANGLES, 0, 96);
 
-            requestAnimationFrame(render);
+            requestId = requestAnimationFrame(render);
         };
 
         render();
+
+        return function cleanup() {
+            if (requestId !== null) {
+                cancelAnimationFrame(requestId);
+            }
+        };
     });
 
     return [canvasRef] as const;
