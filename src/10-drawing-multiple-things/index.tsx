@@ -41,6 +41,7 @@ function useWebGL() {
         fGeometry.setAttribute('normal', new BufferAttribute(new Float32Array(WebGLUtils.getFNormals()), 3));
 
         // program
+        const basicProgram = renderer.createProgram(vertex, basicFragment);
 
         const pointLightProgram = renderer.createProgram(vertex, pointLightFragment, {
             ambientLightColor: [0.1, 0.1, 0.1],
@@ -48,7 +49,6 @@ function useWebGL() {
             specularFactor: 2,
             shininess: 200,
         });
-        const basicProgram = renderer.createProgram(vertex, basicFragment);
 
         const objects: { mesh: Mesh; rotateAxis: number[] }[] = [];
         for (let i = 0; i < 256; i++) {
