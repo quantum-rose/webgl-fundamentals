@@ -3,7 +3,6 @@ export * from './buffergeometry';
 export * from './camera';
 export * from './mesh';
 export * from './object3d';
-export * from './orbitcontrols';
 export * from './orthographiccamera';
 export * from './perspectivecamera';
 export * from './program';

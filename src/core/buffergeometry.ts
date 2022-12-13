@@ -31,13 +31,34 @@ export class BufferGeometry {
     public draw(program: Program) {
         const { attributes, first, count } = this;
         const { gl, attributeSetters } = program;
+
         attributeSetters.forEach((setter, name) => {
             const attribute = attributes.get(name);
-            if (attribute && attribute.needsUpdate) {
+            if (attribute) {
                 setter(attribute);
-                attribute.needsUpdate = false;
             }
         });
-        gl.drawArrays(gl.TRIANGLES, first, count);
+
+        const index = this.getAttribute('index');
+        if (index) {
+            const { array, offset, type, needsUpdate } = index;
+
+            let { buffer } = index;
+            if (!buffer) {
+                buffer = gl.createBuffer();
+                index.buffer = buffer;
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer);
+                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, array, gl.STATIC_DRAW);
+            } else if (needsUpdate) {
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer);
+                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, array, gl.STATIC_DRAW);
+                index.needsUpdate = false;
+            }
+
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer);
+            gl.drawElements(gl.TRIANGLES, count, gl[type], offset);
+        } else {
+            gl.drawArrays(gl.TRIANGLES, first, count);
+        }
     }
 }

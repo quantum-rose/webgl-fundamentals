@@ -49,6 +49,6 @@ export class BufferAttribute {
             this.type = neverType;
         }
 
-        this.needsUpdate = true;
+        this.needsUpdate = false;
     }
 }

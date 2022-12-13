@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
-import { OrbitControls, PerspectiveCamera } from '../core';
+import { PerspectiveCamera } from '../core';
+import { OrbitControls } from '../extras/orbitcontrols';
 import { Matrix4 } from '../math';
 import { WebGLUtils } from '../utils/webglutils';
 import fragment from './fragment.frag';

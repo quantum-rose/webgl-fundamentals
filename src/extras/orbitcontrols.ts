@@ -1,6 +1,6 @@
 import { MouseButton } from '../constants';
+import { Camera } from '../core/camera';
 import { Vector3 } from '../math';
-import { Camera } from './camera';
 
 export class OrbitControls {
     private static _xAxis = new Vector3();
