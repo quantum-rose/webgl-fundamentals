@@ -1,4 +1,4 @@
-import { AttributeName, FrontFaceMode, UniformName, Uniforms } from '../interfaces';
+import { AttributeName, UniformName, Uniforms } from '../interfaces';
 import { WebGLUtils } from '../utils/webglutils';
 import { BufferAttribute } from './bufferattribute';
 
@@ -30,19 +30,6 @@ export class Program {
         this.uniformSetters = new Map();
         this._createAttributeSetters();
         this._createUniformSetters();
-    }
-
-    public frontFace(mode: FrontFaceMode) {
-        this.gl.frontFace(this.gl[mode]);
-    }
-
-    public setUniforms() {
-        const { uniforms, uniformSetters } = this;
-        uniformSetters.forEach((setter, name) => {
-            if (uniforms.hasOwnProperty(name)) {
-                setter(uniforms[name]);
-            }
-        });
     }
 
     private _createAttributeSetters() {

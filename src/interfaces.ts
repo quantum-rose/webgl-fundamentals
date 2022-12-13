@@ -5,5 +5,3 @@ export type UniformName = 'modelMatrix' | 'viewMatrix' | 'modelViewMatrix' | 'pr
 export type Uniforms = {
     [K in UniformName]?: any;
 };
-
-export type FrontFaceMode = 'CW' | 'CCW';
