@@ -71,7 +71,7 @@ function useWebGL() {
             const angle = Math.random() * Math.PI * 2;
             objects.push({
                 mesh,
-                rotateAxis: new Vector3(Math.cos(angle), Math.sin(angle), 0).applyMatrix4(mesh.matrixWorld).sub(mesh.position).normalize(),
+                rotateAxis: new Vector3(Math.cos(angle), Math.sin(angle), 0).applyQuaternion(mesh.quaternion),
             });
         }
 
