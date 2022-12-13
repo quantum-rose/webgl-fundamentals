@@ -76,46 +76,31 @@ export class Renderer {
         camera.updateMatrixWorld();
 
         this._getRenderList(scene).forEach(mesh => {
-            const { geometry, program, matrixWorld: modelMatrix } = mesh;
+            this._draw(camera, mesh);
+        });
+    }
 
-            // 检查 program 是否相同
-            if (this._currentProgramID !== program.id) {
-                this._currentProgramID = program.id;
-                this.gl.useProgram(program.program);
-            }
+    private _draw(camera: Camera, mesh: Mesh) {
+        const { gl } = this;
+        const { geometry, program, matrixWorld: modelMatrix } = mesh;
 
-            // 检查 geometry 是否相同, 如果不同需要重新设置 attribute
-            if (this._currentGeometryID !== geometry.id) {
-                this._currentGeometryID = geometry.id;
-                program.attributeSetters.forEach((setter, name) => {
-                    const attribute = geometry.attributes.get(name);
-                    if (attribute) setter(attribute);
-                });
-            }
+        // 检查 program 是否相同
+        if (this._currentProgramID !== program.id) {
+            this._currentProgramID = program.id;
+            this.gl.useProgram(program.program);
+        }
 
-            // 如果 mesh 的世界矩阵导致三角形顶点的顺逆顺序发生变化，需要调换正面与反面
-            gl.frontFace(modelMatrix.determinant() > 0 ? gl.CCW : gl.CW);
-
-            // 设置 uniform
-            const viewMatrix = camera.matrixWorldInverse;
-            const modelViewMatrix = viewMatrix.clone().multiply(modelMatrix);
-            program.uniforms.modelMatrix = modelMatrix;
-            program.uniforms.viewMatrix = viewMatrix;
-            program.uniforms.modelViewMatrix = modelViewMatrix;
-            program.uniforms.projectionMatrix = camera.projectionMatrix;
-            program.uniforms.cameraPosition = camera.position;
-            program.uniforms.normalMatrix = modelViewMatrix.clone().invert().transpose();
-            program.uniformSetters.forEach((setter, name) => {
-                if (program.uniforms.hasOwnProperty(name)) {
-                    setter(program.uniforms[name]);
-                }
+        // 检查 geometry 是否相同, 如果不同需要重新设置 attribute
+        if (this._currentGeometryID !== geometry.id) {
+            this._currentGeometryID = geometry.id;
+            program.attributeSetters.forEach((setter, name) => {
+                const attribute = geometry.attributes.get(name);
+                if (attribute) setter(attribute);
             });
 
-            // 判断索引数据 index 是否存在，分别采用对应的绘制方法
             const index = geometry.getAttribute('index');
             if (index) {
-                const { array, offset, type, needsUpdate } = index;
-
+                const { array, needsUpdate } = index;
                 let { buffer } = index;
                 if (!buffer) {
                     buffer = gl.createBuffer();
@@ -126,13 +111,37 @@ export class Renderer {
                     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer);
                     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, array, gl.STATIC_DRAW);
                     index.needsUpdate = false;
+                } else {
+                    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer);
                 }
+            }
+        }
 
-                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer);
-                gl.drawElements(gl.TRIANGLES, geometry.count, gl[type], offset);
-            } else {
-                gl.drawArrays(gl.TRIANGLES, geometry.first, geometry.count);
+        // 如果 mesh 的世界矩阵导致三角形顶点的顺逆顺序发生变化，需要调换正面与反面
+        gl.frontFace(modelMatrix.determinant() > 0 ? gl.CCW : gl.CW);
+
+        // 设置 uniform
+        const viewMatrix = camera.matrixWorldInverse;
+        const modelViewMatrix = viewMatrix.clone().multiply(modelMatrix);
+        program.uniforms.modelMatrix = modelMatrix;
+        program.uniforms.viewMatrix = viewMatrix;
+        program.uniforms.modelViewMatrix = modelViewMatrix;
+        program.uniforms.projectionMatrix = camera.projectionMatrix;
+        program.uniforms.cameraPosition = camera.position;
+        program.uniforms.normalMatrix = modelViewMatrix.clone().invert().transpose();
+        program.uniformSetters.forEach((setter, name) => {
+            if (program.uniforms.hasOwnProperty(name)) {
+                setter(program.uniforms[name]);
             }
         });
+
+        // 判断索引数据 index 是否存在，分别采用对应的绘制方法
+        const index = geometry.getAttribute('index');
+        if (index) {
+            const { offset, type } = index;
+            gl.drawElements(gl.TRIANGLES, geometry.count, gl[type], offset);
+        } else {
+            gl.drawArrays(gl.TRIANGLES, geometry.first, geometry.count);
+        }
     }
 }
