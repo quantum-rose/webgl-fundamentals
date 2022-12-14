@@ -1,4 +1,5 @@
 import { Object3DClass } from '../constants';
+import { Uniforms } from '../interfaces';
 import { BufferGeometry } from './buffergeometry';
 import { Object3D } from './object3d';
 import { Program } from './program';
@@ -12,9 +13,12 @@ export class Mesh extends Object3D {
 
     public program: Program;
 
-    constructor(geometry: BufferGeometry, program: Program) {
+    public uniforms: Uniforms;
+
+    constructor(geometry: BufferGeometry, program: Program, uniforms: Uniforms = {}) {
         super();
         this.geometry = geometry;
         this.program = program;
+        this.uniforms = uniforms;
     }
 }

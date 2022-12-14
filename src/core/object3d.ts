@@ -120,7 +120,7 @@ export abstract class Object3D {
 
     public traverse(callback: (obj: Object3D) => boolean) {
         if (callback(this)) return;
-        this.children.forEach(callback);
+        this.children.forEach(child => child.traverse(callback));
     }
 
     public rotateOnWorldAxis(axis: number[], angle: number) {

@@ -5,3 +5,19 @@ export type UniformName = 'modelMatrix' | 'viewMatrix' | 'modelViewMatrix' | 'pr
 export type Uniforms = {
     [K in UniformName]?: any;
 };
+
+export type ColorName =
+    | 'black'
+    | 'white'
+    | 'red'
+    | 'green'
+    | 'blue'
+    | 'fuchsia'
+    | 'cyan'
+    | 'yellow'
+    | 'orange'
+    | 'gray'
+    | 'purple'
+    | 'pink'
+    | 'skyblue'
+    | (string & {});

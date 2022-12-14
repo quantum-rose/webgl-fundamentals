@@ -1,6 +1,7 @@
 export * from './bufferattribute';
 export * from './buffergeometry';
 export * from './camera';
+export * from './group';
 export * from './mesh';
 export * from './object3d';
 export * from './orthographiccamera';

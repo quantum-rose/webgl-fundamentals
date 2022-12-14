@@ -12,4 +12,5 @@ export enum Object3DClass {
     OrthographicCamera = 'Object3D.Camera.OrthographicCamera',
     PerspectiveCamera = 'Object3D.Camera.PerspectiveCamera',
     Mesh = 'Object3D.Mesh',
+    Group = 'Object3D.Group',
 }
