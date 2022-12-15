@@ -84,8 +84,8 @@ export class Vector2 extends Array<number> {
         return Vector2Function.len(this);
     }
 
-    public squaredLength(v: number[]) {
-        return Vector2Function.squaredLength(v);
+    public squaredLength() {
+        return Vector2Function.squaredLength(this);
     }
 
     public setLength(length: number) {
@@ -120,6 +120,10 @@ export class Vector2 extends Array<number> {
         return Vector2Function.transformMatrix4(this, this, m);
     }
 
+    public lerp(v: number[], t: number) {
+        return Vector2Function.lerp(this, this, v, t);
+    }
+
     public rotate(angle: number, center: number[] = [0, 0]) {
         const c = Math.cos(angle);
         const s = Math.sin(angle);
@@ -134,7 +138,7 @@ export class Vector2 extends Array<number> {
         return v[0] === this[0] && v[1] === this[1];
     }
 
-    public nealyEquals(v: number[], tolerance = 1e-6) {
+    public nearlyEquals(v: number[], tolerance = 1e-6) {
         return Math.abs(this[0] - v[0]) < tolerance && Math.abs(this[1] - v[1]) < tolerance;
     }
 

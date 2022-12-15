@@ -97,8 +97,8 @@ export class Vector3 extends Array<number> {
         return Vector3Function.len(this);
     }
 
-    public squaredLength(v: number[]) {
-        return Vector3Function.squaredLength(v);
+    public squaredLength() {
+        return Vector3Function.squaredLength(this);
     }
 
     public setLength(length: number) {
@@ -129,6 +129,10 @@ export class Vector3 extends Array<number> {
         return Vector3Function.transformQuaternion(this, this, q);
     }
 
+    public lerp(v: number[], t: number) {
+        return Vector3Function.lerp(this, this, v, t);
+    }
+
     public applyAxisAngle(axis: number[], angle: number) {
         const q: number[] = [];
         const halfAngle = angle / 2;
@@ -153,7 +157,7 @@ export class Vector3 extends Array<number> {
         return v[0] === this[0] && v[1] === this[1] && v[2] === this[2];
     }
 
-    public nealyEquals(v: number[], tolerance = 1e-6) {
+    public nearlyEquals(v: number[], tolerance = 1e-6) {
         return Math.abs(this[0] - v[0]) < tolerance && Math.abs(this[1] - v[1]) < tolerance && Math.abs(this[2] - v[2]) < tolerance;
     }
 
