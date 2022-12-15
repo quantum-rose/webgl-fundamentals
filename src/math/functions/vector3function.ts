@@ -97,8 +97,20 @@ export class Vector3Function {
         return Math.hypot(a[0], a[1], a[2]);
     }
 
+    public static squaredLength(a: number[]) {
+        const [x, y, z] = a;
+        return x * x + y * y + z * z;
+    }
+
     public static distance(a: number[], b: number[]) {
         return Math.hypot(b[0] - a[0], b[1] - a[1], b[2] - a[2]);
+    }
+
+    public static squaredDistance(a: number[], b: number[]) {
+        const x = b[0] - a[0];
+        const y = b[1] - a[1];
+        const z = b[2] - a[2];
+        return x * x + y * y + z * z;
     }
 
     public static angle(a: number[], b: number[]) {
@@ -142,20 +154,6 @@ export class Vector3Function {
         out[2] = iz * qw + iw * -qz + ix * -qy - iy * -qx;
 
         return out;
-    }
-
-    public static squaredDistance(a: number[], b: number[]) {
-        const x = b[0] - a[0];
-        const y = b[1] - a[1];
-        const z = b[2] - a[2];
-        return x * x + y * y + z * z;
-    }
-
-    public static squaredLength(a: number[]) {
-        const x = a[0];
-        const y = a[1];
-        const z = a[2];
-        return x * x + y * y + z * z;
     }
 
     public static lerp<T extends Array<number>>(out: T, a: number[], b: number[], t: number) {

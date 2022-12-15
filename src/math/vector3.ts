@@ -97,12 +97,20 @@ export class Vector3 extends Array<number> {
         return Vector3Function.len(this);
     }
 
+    public squaredLength(v: number[]) {
+        return Vector3Function.squaredLength(v);
+    }
+
     public setLength(length: number) {
         return this.normalize().scale(length);
     }
 
     public distanceTo(v: number[]) {
         return Vector3Function.distance(this, v);
+    }
+
+    public squaredDistanceTo(v: number[]) {
+        return Vector3Function.squaredDistance(this, v);
     }
 
     public angleTo(v: number[]) {
