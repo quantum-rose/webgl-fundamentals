@@ -140,9 +140,9 @@ export class Renderer {
         const index = geometry.getAttribute('index');
         if (index) {
             const { offset, type } = index;
-            gl.drawElements(gl.TRIANGLES, geometry.count, gl[type], offset);
+            gl.drawElements(gl[mesh.mode], geometry.count, gl[type], offset);
         } else {
-            gl.drawArrays(gl.TRIANGLES, geometry.first, geometry.count);
+            gl.drawArrays(gl[mesh.mode], geometry.first, geometry.count);
         }
     }
 }

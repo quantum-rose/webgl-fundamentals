@@ -9,6 +9,7 @@ import SearchLight from './08-search-light';
 import LessCodeMoreFun from './09-less-code-more-fun';
 import DrawingMultipleThings from './10-drawing-multiple-things';
 import SceneGraph from './11-scene-graph';
+import ThreeDGeometryLathe from './12-3d-geometry-lathe';
 
 export interface Menu {
     id: number;
@@ -71,5 +72,10 @@ export const MenuConfig: Menu[] = [
         id: 10,
         name: 'Scene Graph',
         component: SceneGraph,
+    },
+    {
+        id: 11,
+        name: '3D Geometry Lathe',
+        component: ThreeDGeometryLathe,
     },
 ];
