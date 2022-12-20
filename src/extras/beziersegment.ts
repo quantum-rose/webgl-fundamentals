@@ -26,4 +26,28 @@ export class BezierSegment {
         }
         return p;
     }
+
+    /**
+     * 获取该点的法向量，位于线段左侧
+     */
+    public getNormalAt(t: number) {
+        const tangent = this.getTangentAt(t);
+        return tangent.rotate(Math.PI / 2);
+    }
+
+    /**
+     * 获取该点的切线方向，从靠近起点的一端指向靠近终点的一端
+     */
+    public getTangentAt(t: number) {
+        const n = this.points.length - 1;
+        const pts = this.points.slice();
+        for (let i = n; i > 1; i--) {
+            for (let j = 0; j < n; j++) {
+                const p1 = pts[j];
+                const p2 = pts[j + 1];
+                pts[j] = p1.clone().lerp(p2, t);
+            }
+        }
+        return pts[1].sub(pts[0]).normalize();
+    }
 }

@@ -12,10 +12,10 @@ uniform mat4 projectionMatrix;
 uniform vec3 cameraPosition;
 uniform mat4 normalMatrix;
 
+varying vec3 v_pos;
+varying vec3 v_normal;
 varying vec2 v_uv;
 varying vec4 v_color;
-varying vec3 v_normal;
-varying vec3 v_pos;
 varying vec3 v_cameraPos;
 
 void main() {
