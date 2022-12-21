@@ -1,4 +1,4 @@
-import { MathUtils } from '../utils/mathutils.js';
+import { MathUtil } from '../utils/mathutil.js';
 import { QuaternionFunction } from './functions/quaternionfunction.js';
 
 export class Quaternion extends Array<number> {
@@ -127,7 +127,7 @@ export class Quaternion extends Array<number> {
     }
 
     public angleTo(q: number[]) {
-        return 2 * Math.acos(Math.abs(MathUtils.clamp(this.dot(q), -1, 1)));
+        return 2 * Math.acos(Math.abs(MathUtil.clamp(this.dot(q), -1, 1)));
     }
 
     public rotateTowards(q: number[], step: number) {

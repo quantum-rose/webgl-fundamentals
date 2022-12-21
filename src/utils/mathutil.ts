@@ -1,4 +1,4 @@
-export class MathUtils {
+export class MathUtil {
     private static _factorialCache: number[] = [1, 1, 2, 6];
 
     /**
@@ -14,18 +14,18 @@ export class MathUtils {
      * 阶乘
      */
     public static factorial(n: number): number {
-        const cache = MathUtils._factorialCache[n];
+        const cache = MathUtil._factorialCache[n];
         if (cache !== undefined) {
             return cache;
         }
-        return n * MathUtils.factorial(n - 1);
+        return n * MathUtil.factorial(n - 1);
     }
 
     /**
      * 组合数
      */
     public static combination(n: number, m: number) {
-        return MathUtils.factorial(n) / (MathUtils.factorial(m) * MathUtils.factorial(n - m));
+        return MathUtil.factorial(n) / (MathUtil.factorial(m) * MathUtil.factorial(n - m));
     }
 
     /**

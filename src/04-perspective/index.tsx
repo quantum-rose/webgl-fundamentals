@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { MouseButton } from '../constants';
 import { PerspectiveCamera } from '../core';
 import { Matrix4, Vector3 } from '../math';
-import { WebGLUtils } from '../utils/webglutils';
+import { WebGLUtil } from '../utils/webglutil';
 import fragment from './fragment.frag';
 import vertex from './vertex.vert';
 
@@ -18,14 +18,14 @@ function useWebGL() {
         if (!gl) {
             throw 'failed to get WebGL context';
         }
-        const program = WebGLUtils.createProgram(gl, vertex, fragment);
+        const program = WebGLUtil.createProgram(gl, vertex, fragment);
 
         const positionAttributeLocation = gl.getAttribLocation(program, 'a_position');
         const colorAttributeLocation = gl.getAttribLocation(program, 'a_color');
         const resolutionUniformLocation = gl.getUniformLocation(program, 'u_resolution');
         const matrixUniformLocation = gl.getUniformLocation(program, 'u_matrix');
 
-        WebGLUtils.resizeCanvasToDisplaySize(canvas);
+        WebGLUtil.resizeCanvasToDisplaySize(canvas);
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
         gl.enable(gl.CULL_FACE);
         gl.enable(gl.DEPTH_TEST);
@@ -36,14 +36,14 @@ function useWebGL() {
         // a_position
         const positionBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-        WebGLUtils.setFGeometry(gl);
+        WebGLUtil.setFGeometry(gl);
         gl.enableVertexAttribArray(positionAttributeLocation);
         gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, false, 0, 0);
 
         // a_color
         const colorBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-        WebGLUtils.setFColors(gl);
+        WebGLUtil.setFColors(gl);
         gl.enableVertexAttribArray(colorAttributeLocation);
         gl.vertexAttribPointer(colorAttributeLocation, 3, gl.UNSIGNED_BYTE, true, 0, 0);
 

@@ -1,5 +1,5 @@
 import { Vector2 } from '../math';
-import { MathUtils } from '../utils/mathutils';
+import { MathUtil } from '../utils/mathutil';
 
 export class BezierSegment {
     public points: Vector2[];
@@ -22,7 +22,7 @@ export class BezierSegment {
         const n = this.points.length - 1;
         for (let i = 0; i <= n; i++) {
             const control = this.points[i];
-            p.add(control.clone().scale(MathUtils.combination(n, i) * invT ** (n - i) * t ** i));
+            p.add(control.clone().scale(MathUtil.combination(n, i) * invT ** (n - i) * t ** i));
         }
         return p;
     }

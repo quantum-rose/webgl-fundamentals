@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import Sortable from 'sortablejs';
-import { WebGLUtils } from '../utils/webglutils';
+import { WebGLUtil } from '../utils/webglutil';
 import fragment from './fragment.frag';
 import style from './style.module.css';
 import vertex from './vertex.vert';
@@ -91,14 +91,14 @@ function useWebGL() {
     const updateRef = useRef<((options?: IFilterOption[]) => void) | null>(null);
 
     useEffect(() => {
-        WebGLUtils.loadImage('./leaves.jpg').then(image => {
+        WebGLUtil.loadImage('./leaves.jpg').then(image => {
             const canvas = canvasRef.current!;
 
             const gl = canvas.getContext('webgl');
             if (!gl) {
                 throw 'failed to get WebGL context';
             }
-            const program = WebGLUtils.createProgram(gl, vertex, fragment);
+            const program = WebGLUtil.createProgram(gl, vertex, fragment);
 
             const positionAttributeLocation = gl.getAttribLocation(program, 'a_position');
             const texCoordAttributeLocation = gl.getAttribLocation(program, 'a_texCoord');
@@ -109,7 +109,7 @@ function useWebGL() {
             const kernelWeightUniformLocation = gl.getUniformLocation(program, 'u_kernelWeight');
             const flipYUniformLocation = gl.getUniformLocation(program, 'u_flipY');
 
-            WebGLUtils.resizeCanvasToDisplaySize(canvas);
+            WebGLUtil.resizeCanvasToDisplaySize(canvas);
             gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
             gl.clearColor(0, 0, 0, 0);
             gl.clear(gl.COLOR_BUFFER_BIT);
@@ -118,7 +118,7 @@ function useWebGL() {
             // a_position
             const positionBuffer = gl.createBuffer();
             gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-            WebGLUtils.setRectangle(gl, 0, 0, 240, 180);
+            WebGLUtil.setRectangle(gl, 0, 0, 240, 180);
             gl.enableVertexAttribArray(positionAttributeLocation);
             gl.vertexAttribPointer(positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);
 

@@ -1,5 +1,5 @@
 import { AttributeName, UniformName, Uniforms } from '../interfaces';
-import { WebGLUtils } from '../utils/webglutils';
+import { WebGLUtil } from '../utils/webglutil';
 import { BufferAttribute } from './bufferattribute';
 import { Texture } from './texture';
 
@@ -25,7 +25,7 @@ export class Program {
     constructor(gl: WebGLRenderingContext, vertex: string, fragment: string, uniforms: Uniforms = {}) {
         this.id = Program._currentId++;
         this.gl = gl;
-        this.program = WebGLUtils.createProgram(gl, vertex, fragment);
+        this.program = WebGLUtil.createProgram(gl, vertex, fragment);
         this.uniforms = uniforms;
         this.attributeSetters = new Map();
         this.uniformSetters = new Map();

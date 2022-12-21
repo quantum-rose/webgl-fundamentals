@@ -1,5 +1,5 @@
 import { Uniforms } from '../interfaces';
-import { WebGLUtils } from '../utils/webglutils';
+import { WebGLUtil } from '../utils/webglutil';
 import { Camera } from './camera';
 import { Mesh } from './mesh';
 import { Program } from './program';
@@ -21,7 +21,7 @@ export class Renderer {
             throw 'failed to get WebGL rendering context';
         }
         this.gl = gl;
-        WebGLUtils.resizeCanvasToDisplaySize(canvas);
+        WebGLUtil.resizeCanvasToDisplaySize(canvas);
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
         gl.enable(gl.CULL_FACE);
         gl.enable(gl.DEPTH_TEST);

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { WebGLUtils } from '../utils/webglutils';
+import { WebGLUtil } from '../utils/webglutil';
 import fragment from './fragment.frag';
 import vertex from './vertex.vert';
 
@@ -13,13 +13,13 @@ function useWebGL() {
         if (!gl) {
             throw 'failed to get WebGL context';
         }
-        const program = WebGLUtils.createProgram(gl, vertex, fragment);
+        const program = WebGLUtil.createProgram(gl, vertex, fragment);
 
         const positionAttributeLocation = gl.getAttribLocation(program, 'a_position');
         const resolutionUniformLocation = gl.getUniformLocation(program, 'u_resolution');
         const colorUniformLocation = gl.getUniformLocation(program, 'u_color');
 
-        WebGLUtils.resizeCanvasToDisplaySize(canvas);
+        WebGLUtil.resizeCanvasToDisplaySize(canvas);
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
         gl.clearColor(0, 0, 0, 0);
         gl.clear(gl.COLOR_BUFFER_BIT);
@@ -33,12 +33,12 @@ function useWebGL() {
         gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
 
         for (let i = 0; i < 50; i++) {
-            WebGLUtils.setRectangle(
+            WebGLUtil.setRectangle(
                 gl,
-                WebGLUtils.randomInt(gl.canvas.width),
-                WebGLUtils.randomInt(gl.canvas.height),
-                WebGLUtils.randomInt(500),
-                WebGLUtils.randomInt(300)
+                WebGLUtil.randomInt(gl.canvas.width),
+                WebGLUtil.randomInt(gl.canvas.height),
+                WebGLUtil.randomInt(500),
+                WebGLUtil.randomInt(300)
             );
             gl.uniform4f(colorUniformLocation, Math.random(), Math.random(), Math.random(), 1);
             gl.drawArrays(gl.TRIANGLES, 0, 6);

@@ -1,4 +1,4 @@
-export class WebGLUtils {
+export class WebGLUtil {
     public static compileShader(gl: WebGLRenderingContext, shaderSource: string, shaderType: number) {
         const shader = gl.createShader(shaderType);
         if (!shader) {
@@ -14,8 +14,8 @@ export class WebGLUtils {
     }
 
     public static createProgram(gl: WebGLRenderingContext, vertex: string, fragment: string) {
-        const vertexShader = WebGLUtils.compileShader(gl, vertex, gl.VERTEX_SHADER);
-        const fragmentShader = WebGLUtils.compileShader(gl, fragment, gl.FRAGMENT_SHADER);
+        const vertexShader = WebGLUtil.compileShader(gl, vertex, gl.VERTEX_SHADER);
+        const fragmentShader = WebGLUtil.compileShader(gl, fragment, gl.FRAGMENT_SHADER);
         const program = gl.createProgram();
         if (!program) {
             throw 'unable to create WebGLProgram';
@@ -114,7 +114,7 @@ export class WebGLUtils {
     }
 
     public static setFGeometry(gl: WebGLRenderingContext) {
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(WebGLUtils.getFGeometry()), gl.STATIC_DRAW);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(WebGLUtil.getFGeometry()), gl.STATIC_DRAW);
     }
 
     public static getFColors() {
@@ -170,7 +170,7 @@ export class WebGLUtils {
     }
 
     public static setFColors(gl: WebGLRenderingContext) {
-        gl.bufferData(gl.ARRAY_BUFFER, new Uint8Array(WebGLUtils.getFColors()), gl.STATIC_DRAW);
+        gl.bufferData(gl.ARRAY_BUFFER, new Uint8Array(WebGLUtil.getFColors()), gl.STATIC_DRAW);
     }
 
     /**
@@ -231,6 +231,6 @@ export class WebGLUtils {
     }
 
     public static setFNormals(gl: WebGLRenderingContext) {
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(WebGLUtils.getFNormals()), gl.STATIC_DRAW);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(WebGLUtil.getFNormals()), gl.STATIC_DRAW);
     }
 }

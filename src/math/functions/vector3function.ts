@@ -1,4 +1,4 @@
-import { MathUtils } from '../../utils/mathutils';
+import { MathUtil } from '../../utils/mathutil';
 
 export class Vector3Function {
     public static set<T extends Array<number>>(out: T, x: number, y: number, z: number) {
@@ -116,7 +116,7 @@ export class Vector3Function {
     public static angle(a: number[], b: number[]) {
         const denominator = Math.sqrt(Vector3Function.squaredLength(a) * Vector3Function.squaredLength(b));
         if (denominator === 0) return Math.PI / 2;
-        const theta = MathUtils.clamp(Vector3Function.dot(a, b) / denominator, -1, 1);
+        const theta = MathUtil.clamp(Vector3Function.dot(a, b) / denominator, -1, 1);
         return Math.acos(theta);
     }
 

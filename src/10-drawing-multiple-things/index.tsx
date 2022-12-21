@@ -4,7 +4,7 @@ import { BoxGeometry } from '../extras/boxgeometry';
 import { OrbitControls } from '../extras/orbitcontrols';
 import { SphereGeometry } from '../extras/spheregeometry';
 import { Vector3 } from '../math';
-import { WebGLUtils } from '../utils/webglutils';
+import { WebGLUtil } from '../utils/webglutil';
 import basicFragment from './basic.frag';
 import pointLightFragment from './pointlight.frag';
 import vertex from './vertex.vert';
@@ -36,9 +36,9 @@ function useWebGL() {
         const sphereGeometry = new SphereGeometry(50);
 
         const fGeometry = new BufferGeometry();
-        fGeometry.setAttribute('position', new BufferAttribute(new Float32Array(WebGLUtils.getFGeometry()), 3));
-        fGeometry.setAttribute('color', new BufferAttribute(new Uint8Array(WebGLUtils.getFColors()), 3, true));
-        fGeometry.setAttribute('normal', new BufferAttribute(new Float32Array(WebGLUtils.getFNormals()), 3));
+        fGeometry.setAttribute('position', new BufferAttribute(new Float32Array(WebGLUtil.getFGeometry()), 3));
+        fGeometry.setAttribute('color', new BufferAttribute(new Uint8Array(WebGLUtil.getFColors()), 3, true));
+        fGeometry.setAttribute('normal', new BufferAttribute(new Float32Array(WebGLUtil.getFNormals()), 3));
 
         // program
         const basicProgram = renderer.createProgram(vertex, basicFragment);

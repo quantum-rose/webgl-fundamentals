@@ -1,4 +1,4 @@
-import { MathUtils } from '../utils/mathutils';
+import { MathUtil } from '../utils/mathutil';
 
 export type TextureTarget =
     | 'TEXTURE_2D'
@@ -99,7 +99,7 @@ export class Texture {
             gl.texImage2D(gl[target], level, gl[internalformat], width, height, border, gl[format], gl[type], pixels);
         }
 
-        if (MathUtils.isPowerOf2(width) && MathUtils.isPowerOf2(height)) {
+        if (MathUtil.isPowerOf2(width) && MathUtil.isPowerOf2(height)) {
             gl.generateMipmap(gl[bindTarget]);
         } else {
             gl.texParameteri(gl[bindTarget], gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
