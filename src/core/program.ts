@@ -1,6 +1,7 @@
 import { AttributeName, UniformName, Uniforms } from '../interfaces';
 import { WebGLUtils } from '../utils/webglutils';
 import { BufferAttribute } from './bufferattribute';
+import { Texture } from './texture';
 
 export type AttributeSetter = (attribute: BufferAttribute) => void;
 
@@ -205,11 +206,11 @@ export class Program {
                 units.push(this._textureUnit++);
             }
             const bindPoint = this._getBindPointForSamplerType(type)!;
-            return function (textures: WebGLTexture[]) {
+            return function (textures: Texture[]) {
                 gl.uniform1iv(location, units);
                 textures.forEach(function (texture, index) {
                     gl.activeTexture(gl.TEXTURE0 + units[index]);
-                    gl.bindTexture(bindPoint, texture);
+                    gl.bindTexture(bindPoint, texture.getWebGLTexture(gl));
                 });
             };
         }
@@ -217,10 +218,10 @@ export class Program {
         if (type === gl.SAMPLER_2D || type === gl.SAMPLER_CUBE) {
             const bindPoint = this._getBindPointForSamplerType(type)!;
             const unit = this._textureUnit++;
-            return function (texture: WebGLTexture) {
+            return function (texture: Texture) {
                 gl.uniform1i(location, unit);
                 gl.activeTexture(gl.TEXTURE0 + unit);
-                gl.bindTexture(bindPoint, texture);
+                gl.bindTexture(bindPoint, texture.getWebGLTexture(gl));
             };
         }
 

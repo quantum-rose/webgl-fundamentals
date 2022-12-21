@@ -27,4 +27,11 @@ export class MathUtils {
     public static combination(n: number, m: number) {
         return MathUtils.factorial(n) / (MathUtils.factorial(m) * MathUtils.factorial(n - m));
     }
+
+    /**
+     * 是否是 2 的幂
+     */
+    public static isPowerOf2(n: number) {
+        return (n & (n - 1)) === 0;
+    }
 }

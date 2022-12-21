@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { BufferAttribute, BufferGeometry, Mesh, PerspectiveCamera, Renderer, Scene } from '../core';
+import { BufferAttribute, BufferGeometry, Mesh, PerspectiveCamera, Renderer, Scene, Texture } from '../core';
 import { BezierSegment } from '../extras/beziersegment';
 import { OrbitControls } from '../extras/orbitcontrols';
 import { Matrix4, Vector2, Vector3 } from '../math';
@@ -274,11 +274,15 @@ function useWebGL() {
         geometry.setAttribute('normal', new BufferAttribute(new Float32Array(normals), 3));
         geometry.setAttribute('uv', new BufferAttribute(new Float32Array(uvs), 2));
         geometry.setAttribute('index', new BufferAttribute(new Uint16Array(indices), 1));
+
+        const pointLightPosition = new Vector3(800, 800, 800);
+        const pointLightRotationAxis = [-1, 0, 1];
         const program = renderer.createProgram(vertex, fragment, {
             ambientLightColor: [0.04, 0.04, 0.04],
-            pointLightPosition: [800, -400, 400],
+            pointLightPosition,
             specularFactor: 2,
             shininess: 200,
+            uvGrid: new Texture('./uv-grid.png'),
         });
         const mesh = new Mesh(geometry, program);
         mesh.scale.setY(-1);
@@ -290,6 +294,9 @@ function useWebGL() {
         let requestId: number | null = null;
 
         const render = () => {
+            pointLightPosition.applyAxisAngle(pointLightRotationAxis, 0.004);
+            mesh.rotateY(0.004);
+
             renderer.render(scene, camera);
 
             requestId = requestAnimationFrame(render);

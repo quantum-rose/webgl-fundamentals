@@ -9,3 +9,4 @@ export * from './perspectivecamera';
 export * from './program';
 export * from './renderer';
 export * from './scene';
+export * from './texture';

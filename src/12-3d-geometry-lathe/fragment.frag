@@ -5,6 +5,7 @@ uniform vec3 ambientLightColor;
 uniform vec3 pointLightPosition;
 uniform float specularFactor;
 uniform float shininess;
+uniform sampler2D uvGrid;
 
 varying vec3 v_pos;
 varying vec3 v_normal;
@@ -26,6 +27,7 @@ void main() {
     float diffuse = max(dot(normal, dir), 0.0);
     float specular = getSpecular(dir, normal, eyeDir);
 
-    gl_FragColor.rgb = vec3(fract(v_uv * 8.0), 0.0) * (ambientLightColor + diffuse) + specular;
-    gl_FragColor.a = 1.0;
+    vec4 color = texture2D(uvGrid, v_uv);
+    gl_FragColor.rgb = color.rgb * (ambientLightColor + diffuse) + specular;
+    gl_FragColor.a = color.a;
 }
