@@ -1,4 +1,4 @@
-import { BufferAttribute, BufferGeometry, Group, Mesh, Object3D, Program } from '../core';
+import { BufferAttribute, BufferGeometry } from '../core';
 
 interface IGeometry {
     object: string;
@@ -14,8 +14,6 @@ interface IGeometry {
 
 export class OBJLoader {
     private static _keywordRE = /(\w*)(?: )*(.*)/;
-
-    public program: Program;
 
     public objPositions: number[][];
 
@@ -47,9 +45,7 @@ export class OBJLoader {
 
     private _currentGeometry?: IGeometry;
 
-    constructor(program: Program) {
-        this.program = program;
-
+    constructor() {
         this.objPositions = [[0, 0, 0]];
         this.objTexcoords = [[0, 0]];
         this.objNormals = [[0, 0, 0]];
@@ -65,13 +61,12 @@ export class OBJLoader {
         this._currentGroups = ['Default'];
     }
 
-    public async load(src: string): Promise<Object3D> {
+    public async load(src: string): Promise<BufferGeometry[]> {
         const response = await fetch(src);
         const text = await response.text();
         this.parseOBJ(text);
 
-        const bufferGeometries: BufferGeometry[] = [];
-        this.geometries.forEach(geometry => {
+        return this.geometries.map(geometry => {
             const { position, texcoord, normal, color } = geometry.data;
             const bufferGeometry = new BufferGeometry();
             if (position.length > 0) {
@@ -86,16 +81,8 @@ export class OBJLoader {
             if (color.length > 0) {
                 bufferGeometry.setAttribute('color', new BufferAttribute(new Float32Array(color), 3));
             }
-            bufferGeometries.push(bufferGeometry);
+            return bufferGeometry;
         });
-
-        const object = new Group();
-        bufferGeometries.forEach(geometry => {
-            const mesh = new Mesh(geometry, this.program);
-            mesh.setParent(object);
-        });
-
-        return object;
     }
 
     public parseOBJ(text: string) {

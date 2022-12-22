@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { Object3D, PerspectiveCamera, Renderer, Scene, Texture } from '../core';
+import { Group, Mesh, Object3D, PerspectiveCamera, Renderer, Scene, Texture } from '../core';
 import { OBJLoader } from '../extras/objloader';
 import { OrbitControls } from '../extras/orbitcontrols';
 import { Vector3 } from '../math';
@@ -64,53 +64,60 @@ function useWebGL() {
         render(then);
 
         const uvGrid = new Texture('./uv-grid.png');
+        const textureProgram = renderer.createProgram(vertex, fragment, {
+            ambientLightColor: [0.2, 0.2, 0.2],
+            pointLightPosition,
+            uvGrid: uvGrid,
+        });
+
+        const vertexColorProgram = renderer.createProgram(vertex, vertexColorFragment, {
+            ambientLightColor: [0.2, 0.2, 0.2],
+            pointLightPosition,
+            specularFactor: 0,
+            shininess: 1,
+        });
 
         // 立方体
-        const cubeLoader = new OBJLoader(
-            renderer.createProgram(vertex, fragment, {
-                ambientLightColor: [0.2, 0.2, 0.2],
-                pointLightPosition,
-                specularFactor: 20,
-                shininess: 100,
-                uvGrid: uvGrid,
-            })
-        );
-        cubeLoader.load('./cube.obj').then(object => {
-            object.position.setX(-5);
-            object.setParent(scene);
-            cube = object;
+        const cubeLoader = new OBJLoader();
+        cubeLoader.load('./cube.obj').then(geometries => {
+            cube = new Group();
+            geometries.forEach(geometry => {
+                const mesh = new Mesh(geometry, textureProgram, {
+                    specularFactor: 20,
+                    shininess: 100,
+                });
+                mesh.setParent(cube!);
+            });
+            cube.position.setX(-5);
+            cube.setParent(scene);
         });
 
         // 椅子
-        const chairLoader = new OBJLoader(
-            renderer.createProgram(vertex, fragment, {
-                ambientLightColor: [0.2, 0.2, 0.2],
-                pointLightPosition,
-                specularFactor: 2,
-                shininess: 200,
-                uvGrid: uvGrid,
-            })
-        );
-        chairLoader.load('./chair.obj').then(object => {
-            object.position.setY(-3.5);
-            object.setParent(scene);
-            chair = object;
+        const chairLoader = new OBJLoader();
+        chairLoader.load('./chair.obj').then(geometries => {
+            chair = new Group();
+            geometries.forEach(geometry => {
+                const mesh = new Mesh(geometry, textureProgram, {
+                    specularFactor: 2,
+                    shininess: 200,
+                });
+                mesh.setParent(chair!);
+            });
+            chair.position.setY(-3.5);
+            chair.setParent(scene);
         });
 
         // 书
-        const bookLoader = new OBJLoader(
-            renderer.createProgram(vertex, vertexColorFragment, {
-                ambientLightColor: [0.2, 0.2, 0.2],
-                pointLightPosition,
-                specularFactor: 0,
-                shininess: 1,
-            })
-        );
-        bookLoader.load('./book.obj').then(object => {
-            object.scale.set(5, 5, 5);
-            object.position.setX(5);
-            object.setParent(scene);
-            book = object;
+        const bookLoader = new OBJLoader();
+        bookLoader.load('./book.obj').then(geometries => {
+            book = new Group();
+            geometries.forEach(geometry => {
+                const mesh = new Mesh(geometry, vertexColorProgram);
+                mesh.setParent(book!);
+            });
+            book.scale.set(5, 5, 5);
+            book.position.setX(5);
+            book.setParent(scene);
         });
 
         return function cleanup() {
