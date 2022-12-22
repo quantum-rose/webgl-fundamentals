@@ -31,4 +31,24 @@ export class BufferGeometry {
     public getAttribute(name: AttributeName) {
         return this.attributes.get(name);
     }
+
+    public toLinesGeometry() {
+        const newBufferGeometry = new BufferGeometry();
+        if (this.attributes.has('index')) {
+            this.attributes.forEach((attribute, name) => {
+                if (name === 'index') {
+                    const newAttribute = attribute.toLinesData();
+                    newBufferGeometry.setAttribute(name, newAttribute);
+                } else {
+                    newBufferGeometry.setAttribute(name, attribute.clone());
+                }
+            });
+        } else {
+            this.attributes.forEach((attribute, name) => {
+                const newAttribute = attribute.toLinesData();
+                newBufferGeometry.setAttribute(name, newAttribute);
+            });
+        }
+        return newBufferGeometry;
+    }
 }

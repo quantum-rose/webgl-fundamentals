@@ -11,6 +11,7 @@ import DrawingMultipleThings from './10-drawing-multiple-things';
 import SceneGraph from './11-scene-graph';
 import ThreeDGeometryLathe from './12-3d-geometry-lathe';
 import LoadOBJ from './13-load-obj';
+import MeshModel from './14-mesh-model';
 
 export interface Menu {
     id: number;
@@ -83,5 +84,10 @@ export const MenuConfig: Menu[] = [
         id: 12,
         name: 'Load OBJ',
         component: LoadOBJ,
+    },
+    {
+        id: 13,
+        name: 'Mesh Model',
+        component: MeshModel,
     },
 ];

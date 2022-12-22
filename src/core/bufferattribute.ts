@@ -51,4 +51,29 @@ export class BufferAttribute {
 
         this.needsUpdate = false;
     }
+
+    public toLinesData() {
+        const newArray: number[] = [];
+        for (let i = 0; i < this.count; i += 3) {
+            const a = this.getDataAt(i + 0);
+            const b = this.getDataAt(i + 1);
+            const c = this.getDataAt(i + 2);
+            newArray.push(...a, ...b, ...b, ...c, ...c, ...a);
+        }
+        const typedArrayConstructor = Object.getPrototypeOf(this.array).constructor;
+        return new BufferAttribute(new typedArrayConstructor(newArray), this.size);
+    }
+
+    public getDataAt(index: number) {
+        const data: number[] = [];
+        const offset = index * this.size;
+        for (let i = 0; i < this.size; i++) {
+            data.push(this.array[offset + i]);
+        }
+        return data;
+    }
+
+    public clone() {
+        return new BufferAttribute(this.array, this.size, this.normalized, this.stride, this.offset);
+    }
 }
