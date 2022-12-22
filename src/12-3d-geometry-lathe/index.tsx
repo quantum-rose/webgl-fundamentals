@@ -291,18 +291,24 @@ function useWebGL() {
         camera.position.set(0, -178, 400);
         camera.lookAt(0, -178, 0);
 
+        const rotationSpeed = Math.PI * 0.1;
+
+        let then = 0;
         let requestId: number | null = null;
 
-        const render = () => {
-            pointLightPosition.applyAxisAngle(pointLightRotationAxis, 0.004);
-            mesh.rotateY(0.004);
+        const render = (now: number) => {
+            const angle = rotationSpeed * (now - then) * 0.001;
+            then = now;
+
+            pointLightPosition.applyAxisAngle(pointLightRotationAxis, angle);
+            mesh.rotateY(angle);
 
             renderer.render(scene, camera);
 
             requestId = requestAnimationFrame(render);
         };
 
-        render();
+        render(then);
 
         return function cleanup() {
             if (requestId !== null) {

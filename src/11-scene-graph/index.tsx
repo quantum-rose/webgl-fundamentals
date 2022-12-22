@@ -70,18 +70,27 @@ function useWebGL() {
         moon.position.set(160, 0, 0);
         moon.setParent(moonOrbit);
 
+        const earthRotationSpeed = Math.PI * 0.2;
+        const moonRotationSpeed = Math.PI * 2;
+
+        let then = 0;
         let requestId: number | null = null;
 
-        const render = () => {
-            earthOrbit.rotateY(0.008);
-            moonOrbit.rotateY(0.08);
+        const render = (now: number) => {
+            const deltaT = (now - then) * 0.001;
+            then = now;
+
+            const earthAngle = earthRotationSpeed * deltaT;
+            earthOrbit.rotateY(earthAngle);
+            const moonAngle = moonRotationSpeed * deltaT;
+            moonOrbit.rotateY(moonAngle);
 
             renderer.render(scene, camera);
 
             requestId = requestAnimationFrame(render);
         };
 
-        render();
+        render(then);
 
         return function cleanup() {
             if (requestId !== null) {

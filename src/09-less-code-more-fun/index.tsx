@@ -59,12 +59,18 @@ function useWebGL() {
             });
         }
 
+        const rotationSpeed = Math.PI * 0.2;
+
+        let then = 0;
         let requestId: number | null = null;
 
-        const render = () => {
+        const render = (now: number) => {
+            const angle = rotationSpeed * (now - then) * 0.001;
+            then = now;
+
             objects.forEach(({ mesh, rotateAxis }) => {
-                mesh.position.applyAxisAngle(rotateAxis, 0.008);
-                mesh.rotateOnWorldAxis(rotateAxis, 0.008);
+                mesh.position.applyAxisAngle(rotateAxis, angle);
+                mesh.rotateOnWorldAxis(rotateAxis, angle);
             });
 
             renderer.render(scene, camera);
@@ -72,7 +78,7 @@ function useWebGL() {
             requestId = requestAnimationFrame(render);
         };
 
-        render();
+        render(then);
 
         return function cleanup() {
             if (requestId !== null) {

@@ -129,10 +129,16 @@ function useWebGL() {
             gl.uniform1f(shininessUniformLocation, 200);
         }
 
+        const rotationSpeed = Math.PI * 0.2;
+
+        let then = 0;
         let requestId: number | null = null;
 
-        const render = () => {
-            objectMatrixWorld.rotateY(0.01);
+        const render = (now: number) => {
+            const angle = rotationSpeed * (now - then) * 0.001;
+            then = now;
+
+            objectMatrixWorld.rotateY(angle);
 
             camera.updateMatrixWorld();
 
@@ -144,7 +150,7 @@ function useWebGL() {
             requestId = requestAnimationFrame(render);
         };
 
-        render();
+        render(then);
 
         return function cleanup() {
             if (requestId !== null) {

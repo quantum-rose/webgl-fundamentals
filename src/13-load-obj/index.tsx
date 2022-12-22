@@ -29,25 +29,31 @@ function useWebGL() {
         const pointLightPosition = new Vector3(20, 20, 20);
         const pointLightRotationAxis = [-1, 0, 1];
 
-        let requestId: number | null = null;
-
         let cube: Object3D | undefined;
         let chair: Object3D | undefined;
         let book: Object3D | undefined;
 
-        const render = () => {
-            pointLightPosition.applyAxisAngle(pointLightRotationAxis, 0.004);
+        const rotationSpeed = Math.PI * 0.1;
+
+        let then = 0;
+        let requestId: number | null = null;
+
+        const render = (now: number) => {
+            const angle = rotationSpeed * (now - then) * 0.001;
+            then = now;
+
+            pointLightPosition.applyAxisAngle(pointLightRotationAxis, angle);
 
             if (cube) {
-                cube.rotateY(0.004);
+                cube.rotateY(angle);
             }
 
             if (chair) {
-                chair.rotateY(0.004);
+                chair.rotateY(angle);
             }
 
             if (book) {
-                book.rotateY(0.004);
+                book.rotateY(angle);
             }
 
             renderer.render(scene, camera);
@@ -55,7 +61,7 @@ function useWebGL() {
             requestId = requestAnimationFrame(render);
         };
 
-        render();
+        render(then);
 
         const uvGrid = new Texture('./uv-grid.png');
 
