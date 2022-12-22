@@ -24,7 +24,7 @@ function useWebGL() {
         // controls
         const controls = new OrbitControls(camera, canvas);
 
-        const geometry = new BowlingPinGeometry();
+        const geometry = new BowlingPinGeometry(32, 8);
         const pointLightPosition = new Vector3(800, 800, 800);
         const pointLightRotationAxis = [-1, 0, 1];
         const program = renderer.createProgram(vertex, fragment, {
