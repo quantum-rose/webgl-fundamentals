@@ -127,16 +127,16 @@ export class OBJLoader {
                     this._f(parts);
                     break;
                 case 'o':
-                    this._o(parts, unparsedArgs);
+                    this._o(unparsedArgs);
                     break;
                 case 'g':
                     this._g(parts);
                     break;
                 case 'usemtl':
-                    this._usemtl(parts, unparsedArgs);
+                    this._usemtl(unparsedArgs);
                     break;
                 case 'mtllib':
-                    this._mtllib(parts, unparsedArgs);
+                    this._mtllib(unparsedArgs);
                     break;
                 case 's':
                     break;
@@ -189,7 +189,7 @@ export class OBJLoader {
         });
     }
 
-    private _o(_parts: string[], unparsedArgs: string) {
+    private _o(unparsedArgs: string) {
         this._currentOBJ = unparsedArgs;
         this._newGeometry();
     }
@@ -199,7 +199,7 @@ export class OBJLoader {
         this._newGeometry();
     }
 
-    private _usemtl(_parts: string[], unparsedArgs: string) {
+    private _usemtl(unparsedArgs: string) {
         this._currentMaterial = unparsedArgs;
         this._newGeometry();
     }
@@ -233,7 +233,7 @@ export class OBJLoader {
         }
     }
 
-    private _mtllib(_parts: string[], unparsedArgs: string) {
+    private _mtllib(unparsedArgs: string) {
         this.materialLibs.push(unparsedArgs);
     }
 }
