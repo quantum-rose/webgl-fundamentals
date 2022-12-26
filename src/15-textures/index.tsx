@@ -24,6 +24,7 @@ function useWebGL() {
         const controls = new OrbitControls(camera, canvas);
 
         const geometry = new BoxGeometry(200);
+        const program = renderer.createProgram(vertex, fragment);
 
         {
             const map = new Texture('./uv-grid.png');
@@ -37,11 +38,10 @@ function useWebGL() {
             luminanceMap.generateMipmaps = false;
             luminanceMap.unpackAlignment = 1;
 
-            const program = renderer.createProgram(vertex, fragment, {
+            const mesh = new Mesh(geometry, program, {
                 map,
                 luminanceMap,
             });
-            const mesh = new Mesh(geometry, program);
             mesh.setParent(scene);
             mesh.position.setX(-150);
         }
@@ -60,11 +60,10 @@ function useWebGL() {
             luminanceMap.minFilter = 'NEAREST';
             luminanceMap.magFilter = 'NEAREST';
 
-            const program = renderer.createProgram(vertex, fragment, {
+            const mesh = new Mesh(geometry, program, {
                 map,
                 luminanceMap,
             });
-            const mesh = new Mesh(geometry, program);
             mesh.setParent(scene);
             mesh.position.setX(150);
         }
