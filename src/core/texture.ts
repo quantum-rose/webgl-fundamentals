@@ -24,6 +24,14 @@ export type TextureSource = ImageBitmap | ImageData | HTMLImageElement | HTMLCan
 
 export type TexturePixels = Uint8Array | Uint16Array | Uint32Array | Float32Array;
 
+export type TextureWrap = 'REPEAT' | 'CLAMP_TO_EDGE' | 'MIRRORED_REPEAT';
+
+export type TextureMagFilter = 'LINEAR' | 'NEAREST';
+
+export type TextureMinFilter = 'LINEAR' | 'NEAREST' | 'NEAREST_MIPMAP_NEAREST' | 'LINEAR_MIPMAP_NEAREST' | 'NEAREST_MIPMAP_LINEAR' | 'LINEAR_MIPMAP_LINEAR';
+
+export type TextureAlignment = 1 | 2 | 4 | 8;
+
 export class Texture {
     public static loadImage(src: string) {
         const image = new Image();
@@ -52,6 +60,43 @@ export class Texture {
     public height: number = 0;
 
     public border: number = 0;
+
+    public wrapS: TextureWrap = 'CLAMP_TO_EDGE';
+
+    public wrapT: TextureWrap = 'CLAMP_TO_EDGE';
+
+    private _generateMipmaps: boolean = true;
+
+    public get generateMipmaps() {
+        return this._generateMipmaps;
+    }
+
+    public set generateMipmaps(value: boolean) {
+        this._generateMipmaps = value;
+        this._minFilter = value ? 'NEAREST_MIPMAP_LINEAR' : 'LINEAR';
+    }
+
+    private _minFilter: TextureMinFilter = 'NEAREST_MIPMAP_LINEAR';
+
+    public get minFilter() {
+        return this._minFilter;
+    }
+
+    /**
+     * 当 generateMipmaps 的值为 false 时，仅能接受 'LINEAR' 和 'NEAREST'
+     */
+    public set minFilter(value: TextureMinFilter) {
+        if (this._generateMipmaps || value === 'LINEAR' || value === 'NEAREST') {
+            this._minFilter = value;
+        } else {
+            this._minFilter = 'LINEAR';
+            console.warn('generateMipmaps is false, minFilter is reset to "LINEAR".');
+        }
+    }
+
+    public magFilter: TextureMagFilter = 'LINEAR';
+
+    public unpackAlignment: TextureAlignment = 4;
 
     private _texture: WebGLTexture | null = null;
 
@@ -110,19 +155,40 @@ export class Texture {
         const bindTarget = this.target === 'TEXTURE_2D' ? 'TEXTURE_2D' : 'TEXTURE_CUBE_MAP';
         gl.bindTexture(gl[bindTarget], this._texture);
 
-        const { target, level, internalformat, format, type, source, pixels, width, height, border } = this;
+        const {
+            target,
+            level,
+            internalformat,
+            format,
+            type,
+            source,
+            pixels,
+            width,
+            height,
+            border,
+            wrapS,
+            wrapT,
+            generateMipmaps,
+            minFilter,
+            magFilter,
+            unpackAlignment,
+        } = this;
+
+        gl.pixelStorei(gl.UNPACK_ALIGNMENT, unpackAlignment);
+
+        gl.texParameteri(gl[bindTarget], gl.TEXTURE_WRAP_S, gl[wrapS]);
+        gl.texParameteri(gl[bindTarget], gl.TEXTURE_WRAP_T, gl[wrapT]);
+        gl.texParameteri(gl[bindTarget], gl.TEXTURE_MIN_FILTER, gl[minFilter]);
+        gl.texParameteri(gl[bindTarget], gl.TEXTURE_MAG_FILTER, gl[magFilter]);
+
         if (source) {
             gl.texImage2D(gl[target], level, gl[internalformat], gl[format], gl[type], source);
         } else {
             gl.texImage2D(gl[target], level, gl[internalformat], width, height, border, gl[format], gl[type], pixels);
         }
 
-        if (MathUtil.isPowerOf2(width) && MathUtil.isPowerOf2(height)) {
+        if (generateMipmaps && MathUtil.isPowerOf2(width) && MathUtil.isPowerOf2(height)) {
             gl.generateMipmap(gl[bindTarget]);
-        } else {
-            gl.texParameteri(gl[bindTarget], gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-            gl.texParameteri(gl[bindTarget], gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-            gl.texParameteri(gl[bindTarget], gl.TEXTURE_MIN_FILTER, gl.LINEAR);
         }
 
         return this._texture;

@@ -12,6 +12,7 @@ import SceneGraph from './11-scene-graph';
 import ThreeDGeometryLathe from './12-3d-geometry-lathe';
 import LoadOBJ from './13-load-obj';
 import MeshModel from './14-mesh-model';
+import Textures from './15-textures';
 
 export interface Menu {
     id: number;
@@ -89,5 +90,10 @@ export const MenuConfig: Menu[] = [
         id: 13,
         name: 'Mesh Model',
         component: MeshModel,
+    },
+    {
+        id: 14,
+        name: 'Textures',
+        component: Textures,
     },
 ];
