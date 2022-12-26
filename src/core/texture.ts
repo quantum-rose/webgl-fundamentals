@@ -20,7 +20,7 @@ export type TextureType =
     | 'UNSIGNED_INT'
     | 'FLOAT';
 
-export type TextureSource = TexImageSource | string;
+export type TextureSource = ImageBitmap | ImageData | HTMLImageElement | HTMLCanvasElement | HTMLVideoElement | OffscreenCanvas;
 
 export type TexturePixels = Uint8Array | Uint16Array | Uint32Array | Float32Array;
 
@@ -55,23 +55,41 @@ export class Texture {
 
     private _texture: WebGLTexture | null = null;
 
+    constructor(url: string);
     constructor(source: TextureSource);
     constructor(pixels: TexturePixels, width: number, height: number);
-    constructor(source: TextureSource | TexturePixels, width?: number, height?: number) {
+    constructor(source: TextureSource | TexturePixels | string, width?: number, height?: number) {
         if (typeof source === 'string') {
             Texture.loadImage(source).then(image => {
                 this.source = image;
                 this.width = image.width;
                 this.height = image.height;
             });
-        } else if (source instanceof Uint8Array || source instanceof Uint16Array || source instanceof Uint32Array || source instanceof Float32Array) {
-            this.pixels = source;
-            this.width = width!;
-            this.height = height!;
-        } else if (source) {
+        } else if (
+            source instanceof ImageBitmap ||
+            source instanceof ImageData ||
+            source instanceof HTMLImageElement ||
+            source instanceof HTMLCanvasElement ||
+            source instanceof HTMLVideoElement ||
+            source instanceof OffscreenCanvas
+        ) {
             this.source = source;
             this.width = source.width;
             this.height = source.height;
+        } else {
+            this.pixels = source;
+            this.width = width!;
+            this.height = height!;
+
+            if (source instanceof Uint8Array) {
+                this.type = 'UNSIGNED_BYTE';
+            } else if (source instanceof Uint16Array) {
+                this.type = 'UNSIGNED_SHORT';
+            } else if (source instanceof Uint32Array) {
+                this.type = 'UNSIGNED_INT';
+            } else if (source instanceof Float32Array) {
+                this.type = 'FLOAT';
+            }
         }
     }
 
