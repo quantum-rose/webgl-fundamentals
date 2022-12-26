@@ -32,11 +32,8 @@ function useWebGL() {
             map.minFilter = 'LINEAR_MIPMAP_LINEAR';
             map.magFilter = 'NEAREST';
 
-            const luminanceMap = new Texture(new Uint8Array([0, 51, 102, 153, 204, 255]), 3, 2);
-            luminanceMap.internalformat = 'LUMINANCE';
-            luminanceMap.format = 'LUMINANCE';
+            const luminanceMap = new Texture('https://c1.staticflickr.com/9/8873/18598400202_3af67ef38f_q.jpg');
             luminanceMap.generateMipmaps = false;
-            luminanceMap.unpackAlignment = 1;
 
             const mesh = new Mesh(geometry, program, {
                 map,

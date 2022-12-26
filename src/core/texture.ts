@@ -33,9 +33,12 @@ export type TextureMinFilter = 'LINEAR' | 'NEAREST' | 'NEAREST_MIPMAP_NEAREST' |
 export type TextureAlignment = 1 | 2 | 4 | 8;
 
 export class Texture {
-    public static loadImage(src: string) {
+    public static loadImage(url: string) {
         const image = new Image();
-        image.src = src;
+        if (new URL(url, window.location.href).origin !== window.location.origin) {
+            image.crossOrigin = '';
+        }
+        image.src = url;
         return new Promise<HTMLImageElement>(resolve => {
             image.onload = () => resolve(image);
         });
