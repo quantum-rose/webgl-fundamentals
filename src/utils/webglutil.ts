@@ -233,4 +233,12 @@ export class WebGLUtil {
     public static setFNormals(gl: WebGLRenderingContext) {
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(WebGLUtil.getFNormals()), gl.STATIC_DRAW);
     }
+
+    public static arrayNeedsUint32(array: number[]) {
+        // 倒序遍历，较大的值通常在后面
+        for (let i = array.length - 1; i >= 0; --i) {
+            if (array[i] > 65535) return true;
+        }
+        return false;
+    }
 }

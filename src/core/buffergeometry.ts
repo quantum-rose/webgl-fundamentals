@@ -1,4 +1,5 @@
 import { AttributeName } from '../interfaces';
+import { WebGLUtil } from '../utils/webglutil';
 import { BufferAttribute } from './bufferattribute';
 
 export class BufferGeometry {
@@ -30,6 +31,20 @@ export class BufferGeometry {
 
     public getAttribute(name: AttributeName) {
         return this.attributes.get(name);
+    }
+
+    public setIndex(indices: number[] | Uint16Array | Uint32Array) {
+        let array: Uint16Array | Uint32Array;
+        if (Array.isArray(indices)) {
+            if (WebGLUtil.arrayNeedsUint32(indices)) {
+                array = new Uint32Array(indices);
+            } else {
+                array = new Uint16Array(indices);
+            }
+        } else {
+            array = indices;
+        }
+        this.setAttribute('index', new BufferAttribute(array, 1));
     }
 
     public toLinesGeometry() {

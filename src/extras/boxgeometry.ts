@@ -86,6 +86,6 @@ export class BoxGeometry extends BufferGeometry {
         this.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));
         this.setAttribute('normal', new BufferAttribute(new Float32Array(normals), 3));
         this.setAttribute('uv', new BufferAttribute(new Float32Array(uvs), 2));
-        this.setAttribute('index', new BufferAttribute(new Uint16Array(indices), 1));
+        this.setIndex(indices);
     }
 }

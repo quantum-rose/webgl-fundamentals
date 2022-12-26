@@ -27,6 +27,8 @@ export class Renderer {
         gl.enable(gl.DEPTH_TEST);
         gl.clearColor(0, 0, 0, 1);
         gl.clear(gl.COLOR_BUFFER_BIT);
+
+        gl.getExtension('OES_element_index_uint');
     }
 
     public createProgram(vertex: string, fragment: string, uniforms?: Uniforms) {
