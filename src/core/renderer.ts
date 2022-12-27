@@ -35,6 +35,23 @@ export class Renderer {
         return new Program(this.gl, vertex, fragment, uniforms);
     }
 
+    public setViewPort(x: number, y: number, width: number, height: number) {
+        this.gl.viewport(x, y, width, height);
+    }
+
+    public setScissor(x: number, y: number, width: number, height: number) {
+        this.gl.scissor(x, y, width, height);
+    }
+
+    public setScissorTest(scissorTest: boolean) {
+        const { gl } = this;
+        if (scissorTest) {
+            gl.enable(gl.SCISSOR_TEST);
+        } else {
+            gl.disable(gl.SCISSOR_TEST);
+        }
+    }
+
     private _getRenderList(scene: Scene) {
         const programID2Meshs = new Map<number, Mesh[]>();
         scene.traverse(obj => {
@@ -71,6 +88,13 @@ export class Renderer {
 
     public render(scene: Scene, camera: Camera) {
         const { gl } = this;
+        const { background } = scene;
+
+        if (background) {
+            gl.clearColor(background.r, background.g, background.b, 1);
+        } else {
+            gl.clearColor(0, 0, 0, 1);
+        }
 
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 

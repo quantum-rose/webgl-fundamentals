@@ -1,0 +1,12 @@
+.scene-graph {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.event-layer {
+    position: absolute;
+    top: 0;
+    width: 50%;
+    height: 100%;
+}
