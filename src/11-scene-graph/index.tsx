@@ -4,6 +4,7 @@ import { BoxGeometry } from '../extras/boxgeometry';
 import { OrbitControls } from '../extras/orbitcontrols';
 import { SphereGeometry } from '../extras/spheregeometry';
 import { Color } from '../math/color';
+import { WebGLUtil } from '../utils/webglutil';
 import blockGuyFragment from './blockguy.frag';
 import planetFragment from './planet.frag';
 import stellarFragment from './stellar.frag';
@@ -292,11 +293,20 @@ function useWebGL() {
 
         let requestId: number | null = null;
 
-        const halfWidth = canvas.width / 2;
+        let halfWidth = renderer.drawingBufferWidth / 2;
 
         const render = (t: number) => {
             solarSystemAnimation(t);
             blockGuyAnimation(t);
+
+            if (WebGLUtil.resizeCanvasToDisplaySize(canvas)) {
+                halfWidth = renderer.drawingBufferWidth / 2;
+                const aspect = canvas.clientWidth / 2 / canvas.clientHeight;
+                solarSystemCamera.aspect = aspect;
+                solarSystemCamera.updateProjectionMatrix();
+                blockGuyCamera.aspect = aspect;
+                blockGuyCamera.updateProjectionMatrix();
+            }
 
             renderer.setViewPort(0, 0, halfWidth, canvas.height);
             renderer.setScissor(0, 0, halfWidth, canvas.height);

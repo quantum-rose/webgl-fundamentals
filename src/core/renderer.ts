@@ -14,6 +14,14 @@ export class Renderer {
 
     private _currentGeometryID?: number;
 
+    public get drawingBufferWidth() {
+        return this.gl.drawingBufferWidth;
+    }
+
+    public get drawingBufferHeight() {
+        return this.gl.drawingBufferHeight;
+    }
+
     constructor(canvas: HTMLCanvasElement) {
         this.canvas = canvas;
         const gl = canvas.getContext('webgl');
@@ -22,7 +30,7 @@ export class Renderer {
         }
         this.gl = gl;
         WebGLUtil.resizeCanvasToDisplaySize(canvas);
-        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+        gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
         gl.enable(gl.CULL_FACE);
         gl.enable(gl.DEPTH_TEST);
         gl.clearColor(0, 0, 0, 1);
