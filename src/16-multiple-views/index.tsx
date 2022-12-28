@@ -22,7 +22,7 @@ function useWebGL() {
 
     useEffect(() => {
         const canvas = canvasRef.current!;
-        const canvasBound = canvas.getBoundingClientRect();
+        let canvasBound = canvas.getBoundingClientRect();
         const scrollContainer = scrollContainerRef.current!;
 
         // renderer
@@ -105,6 +105,10 @@ function useWebGL() {
             ball.rotateOnAxis(rotationAxis, angle);
             bowlingPin.rotateY(angle);
             f.rotateY(angle);
+
+            if (WebGLUtil.resizeCanvasToDisplaySize(canvas)) {
+                canvasBound = canvas.getBoundingClientRect();
+            }
 
             items.forEach(({ object, element, background }) => {
                 const rect = element.getBoundingClientRect();
