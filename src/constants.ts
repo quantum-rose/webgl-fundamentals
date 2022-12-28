@@ -1,10 +1,10 @@
 export enum MouseButton {
-    NONE,
-    LEFT,
-    RIGHT,
-    MIDDLE,
-    BACK,
-    FORWARD,
+    NONE = 0,
+    LEFT = 1,
+    RIGHT = 2,
+    MIDDLE = 4,
+    BACK = 8,
+    FORWARD = 16,
 }
 
 export enum Object3DClass {
