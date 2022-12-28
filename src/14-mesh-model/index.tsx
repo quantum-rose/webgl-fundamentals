@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { Group, Mesh, Object3D, PerspectiveCamera, Renderer, Scene } from '../core';
+import { Group, Mesh, Object3D, OrthographicCamera, Renderer, Scene } from '../core';
 import { BowlingPinGeometry } from '../extras/bowlingpingeometry';
 import { OBJLoader } from '../extras/objloader';
 import { OrbitControls } from '../extras/orbitcontrols';
@@ -20,7 +20,9 @@ function useWebGL() {
         const scene = new Scene();
 
         // camera
-        const camera = new PerspectiveCamera(35, canvas.clientWidth / canvas.clientHeight, 1, 1000);
+        const halfW = 8;
+        const halfH = (halfW * canvas.clientHeight) / canvas.clientWidth;
+        const camera = new OrthographicCamera(-halfW, halfW, halfH, -halfH, 0, 800);
         camera.position.set(0, 0, 16);
 
         // controls
@@ -34,6 +36,7 @@ function useWebGL() {
             pointLightPosition,
         });
 
+        // 保龄球瓶
         const bowlingPinGeometry = new BowlingPinGeometry().toLinesGeometry()!;
         const bowlingPin = new Mesh(bowlingPinGeometry, program, {
             specularFactor: 2,
@@ -108,7 +111,7 @@ function useWebGL() {
                 mesh.mode = 'LINES';
                 mesh.setParent(chair!);
             });
-            chair.position.setY(-3.5);
+            chair.position.setY(-3.75);
             chair.setParent(scene);
         });
 
