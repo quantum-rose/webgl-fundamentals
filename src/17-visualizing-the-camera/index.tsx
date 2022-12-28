@@ -3,6 +3,7 @@ import { BufferAttribute, BufferGeometry, Mesh, PerspectiveCamera, Renderer, Sce
 import { OrbitControls } from '../extras/orbitcontrols';
 import { WebGLUtil } from '../utils/webglutil';
 import basicFragment from './basic.frag';
+import clipSpaceCubeVertex from './clipspacecube.vert';
 import style from './style.module.css';
 import vertex from './vertex.vert';
 import vertexColorFragment from './vertexcolor.frag';
@@ -89,6 +90,66 @@ function getCameraGeometry() {
     return geometry;
 }
 
+function getClipSpaceCubeGeometry() {
+    const positions = [
+        -1,
+        -1,
+        -1, // 立方体的顶点
+        1,
+        -1,
+        -1,
+        -1,
+        1,
+        -1,
+        1,
+        1,
+        -1,
+        -1,
+        -1,
+        1,
+        1,
+        -1,
+        1,
+        -1,
+        1,
+        1,
+        1,
+        1,
+        1,
+    ];
+    const indices = [
+        0,
+        1,
+        1,
+        3,
+        3,
+        2,
+        2,
+        0, // 立方体的索引
+        4,
+        5,
+        5,
+        7,
+        7,
+        6,
+        6,
+        4,
+        0,
+        4,
+        1,
+        5,
+        3,
+        7,
+        2,
+        6,
+    ];
+
+    const geometry = new BufferGeometry();
+    geometry.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));
+    geometry.setIndex(indices);
+    return geometry;
+}
+
 function useWebGL() {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const eventLayerLeft = useRef<HTMLDivElement | null>(null);
@@ -107,16 +168,14 @@ function useWebGL() {
         let aspect = canvas.clientWidth / 2 / canvas.clientHeight;
 
         // camera
-        const camera = new PerspectiveCamera(70, aspect, 1, 10000);
-        camera.position.setZ(200);
+        const camera = new PerspectiveCamera(35, aspect, 30, 600);
+        camera.position.setZ(400);
         const controls = new OrbitControls(camera, eventLayerLeft.current!);
-        (controls as any).name = 1;
 
         // third camera
         const thirdCamera = new PerspectiveCamera(70, aspect, 1, 10000);
-        thirdCamera.position.set(200, 200, 400);
+        thirdCamera.position.set(450, 300, 600);
         const thirdControls = new OrbitControls(thirdCamera, eventLayerRight.current!);
-        (thirdControls as any).name = 2;
 
         // F
         const fGeometry = new BufferGeometry();
@@ -136,23 +195,29 @@ function useWebGL() {
 
         // Visualizing The Camera
         const cameraGeometry = getCameraGeometry();
-        const basicProgram = renderer.createProgram(vertex, basicFragment);
-        const cameraMesh = new Mesh(cameraGeometry, basicProgram, {
+        const basicProgram = renderer.createProgram(vertex, basicFragment, {
             color: [1, 1, 1],
         });
+        const cameraMesh = new Mesh(cameraGeometry, basicProgram);
         cameraMesh.mode = 'LINES';
         cameraMesh.scale.set(10, 10, 10);
         cameraMesh.setParent(scene);
+
+        // clip space cube
+        const clipSpaceCubeGeometry = getClipSpaceCubeGeometry();
+        const clipSpaceCubeProgram = renderer.createProgram(clipSpaceCubeVertex, basicFragment, {
+            matrix: camera.projectionMatrix.clone().multiply(camera.matrixWorldInverse).invert(),
+            color: [1, 0, 0],
+        });
+        const clipSpaceCubeMesh = new Mesh(clipSpaceCubeGeometry, clipSpaceCubeProgram);
+        clipSpaceCubeMesh.mode = 'LINES';
+        clipSpaceCubeMesh.setParent(scene);
 
         let requestId: number | null = null;
 
         let halfWidth = renderer.drawingBufferWidth / 2;
 
         const render = () => {
-            cameraMesh.up.copy(camera.up);
-            cameraMesh.position.copy(camera.position);
-            cameraMesh.lookAt(camera.target.clone().sub(camera.position).negate().add(camera.position));
-
             if (WebGLUtil.resizeCanvasToDisplaySize(canvas)) {
                 halfWidth = renderer.drawingBufferWidth / 2;
                 aspect = canvas.clientWidth / 2 / canvas.clientHeight;
@@ -162,9 +227,19 @@ function useWebGL() {
                 thirdCamera.updateProjectionMatrix();
             }
 
+            cameraMesh.visible = false;
+            clipSpaceCubeMesh.visible = false;
+
             renderer.setViewPort(0, 0, halfWidth, canvas.height);
             renderer.setScissor(0, 0, halfWidth, canvas.height);
             renderer.render(scene, camera);
+
+            clipSpaceCubeMesh.uniforms.matrix = camera.projectionMatrix.clone().multiply(camera.matrixWorldInverse).invert();
+            cameraMesh.visible = true;
+
+            cameraMesh.position.copy(camera.position);
+            cameraMesh.quaternion.copy(camera.quaternion);
+            clipSpaceCubeMesh.visible = true;
 
             renderer.setViewPort(halfWidth, 0, halfWidth, canvas.height);
             renderer.setScissor(halfWidth, 0, halfWidth, canvas.height);
