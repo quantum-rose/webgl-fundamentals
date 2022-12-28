@@ -1,0 +1,22 @@
+.visualizing-the-camera {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.visualizing-the-camera::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 1px;
+    height: 100%;
+    background-color: #fff;
+}
+
+.event-layer {
+    position: absolute;
+    top: 0;
+    width: 50%;
+    height: 100%;
+}

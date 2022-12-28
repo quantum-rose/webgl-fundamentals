@@ -14,6 +14,7 @@ import LoadOBJ from './13-load-obj';
 import MeshModel from './14-mesh-model';
 import Textures from './15-textures';
 import MultipleViews from './16-multiple-views';
+import VisualizingTheCamera from './17-visualizing-the-camera';
 
 export interface Menu {
     id: number;
@@ -101,5 +102,10 @@ export const MenuConfig: Menu[] = [
         id: 15,
         name: 'Multiple Views',
         component: MultipleViews,
+    },
+    {
+        id: 16,
+        name: 'Visualizing The Camera',
+        component: VisualizingTheCamera,
     },
 ];
