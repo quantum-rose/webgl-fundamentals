@@ -1,0 +1,27 @@
+.slider {
+    position: relative;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    height: 24px;
+    color: #ababab;
+    font-size: 12px;
+    line-height: 24px;
+}
+
+.label {
+    position: absolute;
+    top: 0;
+    right: calc(100% + 4px);
+}
+
+.input {
+    height: 16px;
+}
+
+.value {
+    position: absolute;
+    top: 0;
+    left: calc(100% + 4px);
+}
