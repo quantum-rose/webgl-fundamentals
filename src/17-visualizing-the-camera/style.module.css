@@ -12,7 +12,7 @@
     width: 2px;
     height: 100%;
     background-image: linear-gradient(to bottom, transparent 0%, #454545 50%, transparent 100%);
-    background-size: 1px 50%;
+    background-size: 1px 25%;
     pointer-events: none;
 }
 
