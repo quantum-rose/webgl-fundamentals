@@ -22,6 +22,8 @@ export class Renderer {
         return this.gl.drawingBufferHeight;
     }
 
+    public autoClear = true;
+
     constructor(canvas: HTMLCanvasElement) {
         this.canvas = canvas;
         const gl = canvas.getContext('webgl');
@@ -58,6 +60,11 @@ export class Renderer {
         } else {
             gl.disable(gl.SCISSOR_TEST);
         }
+    }
+
+    public clear() {
+        const { gl } = this;
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     }
 
     private _getRenderList(scene: Scene) {
@@ -104,7 +111,7 @@ export class Renderer {
             gl.clearColor(0, 0, 0, 1);
         }
 
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        if (this.autoClear) this.clear();
 
         scene.updateMatrixWorld();
         camera.updateMatrixWorld();
