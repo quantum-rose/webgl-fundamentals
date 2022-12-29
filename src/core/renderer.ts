@@ -134,10 +134,7 @@ export class Renderer {
         // 检查 geometry 是否相同, 如果不同需要重新设置 attribute
         if (this._currentGeometryID !== geometry.id) {
             this._currentGeometryID = geometry.id;
-            program.attributeSetters.forEach((setter, name) => {
-                const attribute = geometry.attributes.get(name);
-                if (attribute) setter(attribute);
-            });
+            program.attributeSetters.forEach((setter, name) => setter(geometry.attributes.get(name)));
 
             const index = geometry.getAttribute('index');
             if (index) {

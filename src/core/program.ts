@@ -3,7 +3,7 @@ import { WebGLUtil } from '../utils/webglutil';
 import { BufferAttribute } from './bufferattribute';
 import { Texture } from './texture';
 
-export type AttributeSetter = (attribute: BufferAttribute) => void;
+export type AttributeSetter = (attribute?: BufferAttribute) => void;
 
 export type UniformSetter = (v: any) => void;
 
@@ -48,8 +48,13 @@ export class Program {
     }
 
     private _createAttributeSetter(index: number): AttributeSetter {
-        return (attribute: BufferAttribute) => {
+        return (attribute?: BufferAttribute) => {
             const { gl } = this;
+            if (!attribute) {
+                gl.disableVertexAttribArray(index);
+                return;
+            }
+
             const { array, size, type, normalized, stride, offset, needsUpdate } = attribute;
 
             let { buffer } = attribute;
