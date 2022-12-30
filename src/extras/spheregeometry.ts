@@ -38,13 +38,11 @@ export class SphereGeometry extends BufferGeometry {
         const vertex = new Vector3();
         const normal = new Vector3();
 
-        // buffers
-        const indices: number[] = [];
-        const vertices: number[] = [];
+        const positions: number[] = [];
         const normals: number[] = [];
         const uvs: number[] = [];
+        const indices: number[] = [];
 
-        // generate vertices, normals and uvs
         for (let iy = 0; iy <= heightSegments; iy++) {
             const verticesRow = [];
 
@@ -62,18 +60,15 @@ export class SphereGeometry extends BufferGeometry {
             for (let ix = 0; ix <= widthSegments; ix++) {
                 const u = ix / widthSegments;
 
-                // vertex
                 vertex.x = -radius * Math.cos(phiStart + u * phiLength) * Math.sin(thetaStart + v * thetaLength);
                 vertex.y = radius * Math.cos(thetaStart + v * thetaLength);
                 vertex.z = radius * Math.sin(phiStart + u * phiLength) * Math.sin(thetaStart + v * thetaLength);
 
-                vertices.push(vertex.x, vertex.y, vertex.z);
+                positions.push(vertex.x, vertex.y, vertex.z);
 
-                // normal
                 normal.copy(vertex).normalize();
                 normals.push(normal.x, normal.y, normal.z);
 
-                // uv
                 uvs.push(u + uOffset, 1 - v);
 
                 verticesRow.push(index++);
@@ -82,7 +77,6 @@ export class SphereGeometry extends BufferGeometry {
             grid.push(verticesRow);
         }
 
-        // indices
         for (let iy = 0; iy < heightSegments; iy++) {
             for (let ix = 0; ix < widthSegments; ix++) {
                 const a = grid[iy][ix + 1];
@@ -95,7 +89,7 @@ export class SphereGeometry extends BufferGeometry {
             }
         }
 
-        this.setAttribute('position', new BufferAttribute(new Float32Array(vertices), 3));
+        this.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));
         this.setAttribute('normal', new BufferAttribute(new Float32Array(normals), 3));
         this.setAttribute('uv', new BufferAttribute(new Float32Array(uvs), 2));
         this.setIndex(indices);
