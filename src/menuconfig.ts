@@ -15,6 +15,7 @@ import MeshModel from './14-mesh-model';
 import Textures from './15-textures';
 import MultipleViews from './16-multiple-views';
 import VisualizingTheCamera from './17-visualizing-the-camera';
+import PlanarProjectionMapping from './18-planar-projection-mapping';
 
 export interface Menu {
     id: number;
@@ -107,5 +108,10 @@ export const MenuConfig: Menu[] = [
         id: 16,
         name: 'Visualizing The Camera',
         component: VisualizingTheCamera,
+    },
+    {
+        id: 17,
+        name: 'Planar Projection Mapping',
+        component: PlanarProjectionMapping,
     },
 ];
