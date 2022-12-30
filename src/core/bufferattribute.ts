@@ -1,8 +1,12 @@
+import { Vector3 } from '../math';
+
 export type IAttributeSource = Int8Array | Uint8Array | Uint8ClampedArray | Int16Array | Uint16Array | Int32Array | Uint32Array | Float32Array;
 
 export type IWebGLDataType = 'BYTE' | 'UNSIGNED_BYTE' | 'SHORT' | 'UNSIGNED_SHORT' | 'INT' | 'UNSIGNED_INT' | 'FLOAT';
 
 export class BufferAttribute {
+    private static _vector3 = new Vector3();
+
     public array: IAttributeSource;
 
     public buffer: WebGLBuffer | null;
@@ -54,7 +58,7 @@ export class BufferAttribute {
 
     public toLinesData() {
         const newArray: number[] = [];
-        for (let i = 0; i < this.count; i += 3) {
+        for (let i = 0, l = this.count; i < l; i += 3) {
             const a = this.getDataAt(i + 0);
             const b = this.getDataAt(i + 1);
             const c = this.getDataAt(i + 2);
@@ -67,13 +71,38 @@ export class BufferAttribute {
     public getDataAt(index: number) {
         const data: number[] = [];
         const offset = index * this.size;
-        for (let i = 0; i < this.size; i++) {
+        for (let i = 0, l = this.size; i < l; i++) {
             data.push(this.array[offset + i]);
         }
         return data;
     }
 
+    public setDataAt(index: number, data: number[]) {
+        const offset = index * this.size;
+        for (let i = 0; i < this.size; i++) {
+            this.array[offset + i] = data[i];
+        }
+    }
+
+    public applyMatrix4(m: number[]) {
+        for (let i = 0, l = this.count; i < l; i++) {
+            BufferAttribute._vector3.fromArray(this.getDataAt(i));
+            BufferAttribute._vector3.applyMatrix4(m);
+            this.setDataAt(i, BufferAttribute._vector3);
+        }
+        return this;
+    }
+
+    public applyNormalMatrix(m: number[]) {
+        for (let i = 0, l = this.count; i < l; i++) {
+            BufferAttribute._vector3.fromArray(this.getDataAt(i));
+            BufferAttribute._vector3.applyNormalMatrix(m);
+            this.setDataAt(i, BufferAttribute._vector3);
+        }
+        return this;
+    }
+
     public clone() {
-        return new BufferAttribute(this.array, this.size, this.normalized, this.stride, this.offset);
+        return new BufferAttribute(this.array.slice(), this.size, this.normalized, this.stride, this.offset);
     }
 }

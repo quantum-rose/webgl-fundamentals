@@ -121,6 +121,10 @@ export class Vector3 extends Array<number> {
         return Vector3Function.transformMatrix3(this, this, m);
     }
 
+    public applyNormalMatrix(m: number[]) {
+        return this.applyMatrix3(m).normalize();
+    }
+
     public applyMatrix4(m: number[]) {
         return Vector3Function.transformMatrix4(this, this, m);
     }

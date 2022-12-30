@@ -134,6 +134,10 @@ export class Matrix4 extends Array<number> {
         return this;
     }
 
+    public makeScale(sx: number, sy: number, sz: number) {
+        return this.set(sx, 0, 0, 0, 0, sy, 0, 0, 0, 0, sz, 0, 0, 0, 0, 1);
+    }
+
     /**
      * 等价于左乘矩阵
      * ┎ 1 0       0      0 ┓
@@ -154,6 +158,12 @@ export class Matrix4 extends Array<number> {
         this[10] = s * n23 + c * n33;
         this[14] = s * n24 + c * n34;
         return this;
+    }
+
+    public makeRotationX(theta: number) {
+        const c = Math.cos(theta);
+        const s = Math.sin(theta);
+        return this.set(1, 0, 0, 0, 0, c, -s, 0, 0, s, c, 0, 0, 0, 0, 1);
     }
 
     /**
@@ -178,6 +188,12 @@ export class Matrix4 extends Array<number> {
         return this;
     }
 
+    public makeRotationY(theta: number) {
+        const c = Math.cos(theta);
+        const s = Math.sin(theta);
+        return this.set(c, 0, s, 0, 0, 1, 0, 0, -s, 0, c, 0, 0, 0, 0, 1);
+    }
+
     /**
      * 等价于左乘矩阵
      * ┎ cos(θ) -sin(θ)  0 0 ┓
@@ -198,6 +214,12 @@ export class Matrix4 extends Array<number> {
         this[9] = s * n13 + c * n23;
         this[13] = s * n14 + c * n24;
         return this;
+    }
+
+    public makeRotationZ(theta: number) {
+        const c = Math.cos(theta);
+        const s = Math.sin(theta);
+        return this.set(c, -s, 0, 0, s, c, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
     }
 
     /**
@@ -221,6 +243,10 @@ export class Matrix4 extends Array<number> {
         this[10] += tz * this[11];
         this[14] += tz * this[15];
         return this;
+    }
+
+    public makeTranslation(tx: number, ty: number, tz: number) {
+        return this.set(1, 0, 0, tx, 0, 1, 0, ty, 0, 0, 1, tz, 0, 0, 0, 1);
     }
 
     public equals(m: number[]) {

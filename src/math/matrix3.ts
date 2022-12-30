@@ -56,6 +56,10 @@ export class Matrix3 extends Array<number> {
         return Matrix3Function.setFromMatrix4(this, m);
     }
 
+    public getNormalMatrix(m: number[]) {
+        return this.setFromMatrix4(m).invert().transpose();
+    }
+
     public setFromQuaternion(q: number[]) {
         return Matrix3Function.setFromQuaternion(this, q);
     }

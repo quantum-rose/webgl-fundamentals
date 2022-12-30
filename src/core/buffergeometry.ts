@@ -1,8 +1,13 @@
 import { AttributeName } from '../interfaces';
+import { Matrix3, Matrix4 } from '../math';
 import { WebGLUtil } from '../utils/webglutil';
 import { BufferAttribute } from './bufferattribute';
 
 export class BufferGeometry {
+    private static _matrix3 = new Matrix3();
+
+    private static _matrix4 = new Matrix4();
+
     private static _currentId = 0;
 
     public id: number;
@@ -45,6 +50,53 @@ export class BufferGeometry {
             array = indices;
         }
         this.setAttribute('index', new BufferAttribute(array, 1));
+    }
+
+    public applyMatrix4(matrix: number[]) {
+        const position = this.attributes.get('position');
+        if (position !== undefined) {
+            position.applyMatrix4(matrix);
+            position.needsUpdate = true;
+        }
+
+        const normal = this.attributes.get('normal');
+        if (normal !== undefined) {
+            BufferGeometry._matrix3.getNormalMatrix(matrix);
+            normal.applyNormalMatrix(BufferGeometry._matrix3);
+            normal.needsUpdate = true;
+        }
+
+        return this;
+    }
+
+    public applyQuaternion(q: number[]) {
+        BufferGeometry._matrix4.setFromQuaternion(q);
+        return this.applyMatrix4(BufferGeometry._matrix4);
+    }
+
+    public scale(sx: number, sy: number, sz: number) {
+        BufferGeometry._matrix4.makeScale(sx, sy, sz);
+        return this.applyMatrix4(BufferGeometry._matrix4);
+    }
+
+    public rotateX(theta: number) {
+        BufferGeometry._matrix4.makeRotationX(theta);
+        return this.applyMatrix4(BufferGeometry._matrix4);
+    }
+
+    public rotateY(theta: number) {
+        BufferGeometry._matrix4.makeRotationY(theta);
+        return this.applyMatrix4(BufferGeometry._matrix4);
+    }
+
+    public rotateZ(theta: number) {
+        BufferGeometry._matrix4.makeRotationZ(theta);
+        return this.applyMatrix4(BufferGeometry._matrix4);
+    }
+
+    public translate(tx: number, ty: number, tz: number) {
+        BufferGeometry._matrix4.makeTranslation(tx, ty, tz);
+        return this.applyMatrix4(BufferGeometry._matrix4);
     }
 
     public toLinesGeometry() {
