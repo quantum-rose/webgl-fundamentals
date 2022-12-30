@@ -49,30 +49,34 @@ export class Program {
 
     private _createAttributeSetter(index: number): AttributeSetter {
         return (attribute?: BufferAttribute) => {
-            const { gl } = this;
-            if (!attribute) {
-                gl.disableVertexAttribArray(index);
-                return;
-            }
-
-            const { array, size, type, normalized, stride, offset, needsUpdate } = attribute;
-
-            let { buffer } = attribute;
-            if (!buffer) {
-                buffer = gl.createBuffer();
-                attribute.buffer = buffer;
-                gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-                gl.bufferData(gl.ARRAY_BUFFER, array, gl.STATIC_DRAW);
-            } else if (needsUpdate) {
-                gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-                gl.bufferData(gl.ARRAY_BUFFER, array, gl.STATIC_DRAW);
-                attribute.needsUpdate = false;
-            }
-
-            gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-            gl.enableVertexAttribArray(index);
-            gl.vertexAttribPointer(index, size, gl[type], normalized, stride, offset);
+            this._setAttribute(index, attribute);
         };
+    }
+
+    private _setAttribute(index: number, attribute?: BufferAttribute) {
+        const { gl } = this;
+        if (!attribute) {
+            gl.disableVertexAttribArray(index);
+            return;
+        }
+
+        const { array, size, type, normalized, stride, offset, needsUpdate } = attribute;
+
+        let { buffer } = attribute;
+        if (!buffer) {
+            buffer = gl.createBuffer();
+            attribute.buffer = buffer;
+            gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+            gl.bufferData(gl.ARRAY_BUFFER, array, gl.STATIC_DRAW);
+        } else if (needsUpdate) {
+            gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+            gl.bufferData(gl.ARRAY_BUFFER, array, gl.STATIC_DRAW);
+            attribute.needsUpdate = false;
+        }
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+        gl.enableVertexAttribArray(index);
+        gl.vertexAttribPointer(index, size, gl[type], normalized, stride, offset);
     }
 
     private _createUniformSetters() {
