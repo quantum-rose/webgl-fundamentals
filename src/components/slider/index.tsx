@@ -6,11 +6,12 @@ export interface ISliderProps {
     value?: number;
     min: number;
     max: number;
+    step?: number;
     onChange?: (value: number) => void;
 }
 
 export default function Slider(props: ISliderProps) {
-    const { label, value: propsValue, min: propsMin, max: propsMax, onChange } = props;
+    const { label, value: propsValue, min: propsMin, max: propsMax, step, onChange } = props;
     let min: number;
     let max: number;
     if (propsMin > propsMax) {
@@ -54,6 +55,7 @@ export default function Slider(props: ISliderProps) {
                 type='range'
                 min={min}
                 max={max}
+                step={step}
                 value={value}
                 onChange={e => {
                     const newValue = parseFloat(e.currentTarget.value);
