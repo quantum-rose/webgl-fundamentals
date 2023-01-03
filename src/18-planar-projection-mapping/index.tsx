@@ -43,7 +43,7 @@ function useWebGL(fov: number, near: number, far: number) {
         // projector
         const projector = new PerspectiveCamera(fov, aspect, near, far);
         projectorRef.current = projector;
-        projector.position.set(4, 12, 0);
+        projector.position.set(4.242, 12, 0);
         projector.up.set(0, 0, -1);
         new OrbitControls(projector, projectorView.current!);
 
@@ -90,7 +90,7 @@ function useWebGL(fov: number, near: number, far: number) {
         ground.setParent(scene);
 
         // ball
-        const ballGeometry = new SphereGeometry(1, 12, 6);
+        const ballGeometry = new SphereGeometry(1, 64, 32);
         const ball = new Mesh(ballGeometry, program, {
             specularFactor: 0.5,
             shininess: 200,
@@ -115,6 +115,8 @@ function useWebGL(fov: number, near: number, far: number) {
                 aspect = canvas.clientWidth / 2 / canvas.clientHeight;
                 camera.aspect = aspect;
                 camera.updateProjectionMatrix();
+                projector.aspect = aspect;
+                projector.updateProjectionMatrix();
             }
 
             projector.updateMatrixWorld();
