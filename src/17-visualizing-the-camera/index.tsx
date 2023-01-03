@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import Slider from '../components/slider';
 import { BufferAttribute, BufferGeometry, Mesh, OrthographicCamera, PerspectiveCamera, Renderer, Scene } from '../core';
+import { CameraGeometry } from '../extras/camerageometry';
+import { ClipSpaceCubeGeometry } from '../extras/clipspacecubegeometry';
 import { OrbitControls } from '../extras/orbitcontrols';
 import { Matrix4 } from '../math';
 import { WebGLUtil } from '../utils/webglutil';
@@ -9,148 +11,6 @@ import pureFragment from './pure.frag';
 import style from './style.module.css';
 import vertex from './vertex.vert';
 import vertexColorFragment from './vertexcolor.frag';
-
-function getCameraGeometry() {
-    // 首先，让我们添加一个立方体。它的范围是 1 到 3，
-    // 因为相机看向的是 -Z 方向，所以我们想要相机在 Z = 0 处开始。
-    // 我们会把一个圆锥放到该立方体的前面，
-    // 且该圆锥的开口方向朝 -Z 方向。
-    const positions = [
-        -1,
-        -1,
-        1, // 立方体的顶点
-        1,
-        -1,
-        1,
-        -1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        -1,
-        -1,
-        3,
-        1,
-        -1,
-        3,
-        -1,
-        1,
-        3,
-        1,
-        1,
-        3,
-        0,
-        0,
-        1, // 圆锥的尖头
-    ];
-    const indices = [
-        0,
-        1,
-        1,
-        3,
-        3,
-        2,
-        2,
-        0, // 立方体的索引
-        4,
-        5,
-        5,
-        7,
-        7,
-        6,
-        6,
-        4,
-        0,
-        4,
-        1,
-        5,
-        3,
-        7,
-        2,
-        6,
-    ];
-    // 添加圆锥的片段
-    const numSegments = 6;
-    const coneBaseIndex = positions.length / 3;
-    const coneTipIndex = coneBaseIndex - 1;
-    for (let i = 0; i < numSegments; ++i) {
-        const u = i / numSegments;
-        const angle = u * Math.PI * 2;
-        const x = Math.cos(angle);
-        const y = Math.sin(angle);
-        positions.push(x, y, 0);
-        // 从圆锥尖头到圆锥边缘的线段
-        indices.push(coneTipIndex, coneBaseIndex + i);
-        // 从圆锥边缘一点到圆锥边缘下一点的线段
-        indices.push(coneBaseIndex + i, coneBaseIndex + ((i + 1) % numSegments));
-    }
-
-    const geometry = new BufferGeometry();
-    geometry.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));
-    geometry.setIndex(indices);
-    return geometry;
-}
-
-function getClipSpaceCubeGeometry() {
-    const positions = [
-        -1,
-        -1,
-        -1, // 立方体的顶点
-        1,
-        -1,
-        -1,
-        -1,
-        1,
-        -1,
-        1,
-        1,
-        -1,
-        -1,
-        -1,
-        1,
-        1,
-        -1,
-        1,
-        -1,
-        1,
-        1,
-        1,
-        1,
-        1,
-    ];
-    const indices = [
-        0,
-        1,
-        1,
-        3,
-        3,
-        2,
-        2,
-        0, // 立方体的索引
-        4,
-        5,
-        5,
-        7,
-        7,
-        6,
-        6,
-        4,
-        0,
-        4,
-        1,
-        5,
-        3,
-        7,
-        2,
-        6,
-    ];
-
-    const geometry = new BufferGeometry();
-    geometry.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));
-    geometry.setIndex(indices);
-    return geometry;
-}
 
 function useWebGL(orthoNear: number, orthoFar: number, perspFov: number, perspNear: number, perspFar: number) {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -216,7 +76,7 @@ function useWebGL(orthoNear: number, orthoFar: number, perspFov: number, perspNe
         f.setParent(scene);
 
         // 相机
-        const cameraGeometry = getCameraGeometry();
+        const cameraGeometry = new CameraGeometry();
         const cameraProgram = renderer.createProgram(vertex, pureFragment, {
             color: [1, 1, 1],
         });
@@ -226,7 +86,7 @@ function useWebGL(orthoNear: number, orthoFar: number, perspFov: number, perspNe
         cameraMesh.setParent(scene);
 
         // 视锥体
-        const clipSpaceCubeGeometry = getClipSpaceCubeGeometry();
+        const clipSpaceCubeGeometry = new ClipSpaceCubeGeometry();
         const clipSpaceCubeProgram = renderer.createProgram(clipSpaceCubeVertex, pureFragment, {
             color: [1, 0, 0],
         });
