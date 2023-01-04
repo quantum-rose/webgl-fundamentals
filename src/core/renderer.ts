@@ -139,18 +139,15 @@ export class Renderer {
             const index = geometry.getAttribute('index');
             if (index) {
                 const { array, needsUpdate } = index;
-                let { buffer } = index;
-                if (!buffer) {
-                    buffer = gl.createBuffer();
-                    index.buffer = buffer;
-                    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer);
-                    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, array, gl.STATIC_DRAW);
-                } else if (needsUpdate) {
-                    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer);
+                if (!index.buffer || needsUpdate) {
+                    if (!index.buffer) {
+                        index.buffer = gl.createBuffer();
+                    }
+                    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, index.buffer);
                     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, array, gl.STATIC_DRAW);
                     index.needsUpdate = false;
                 } else {
-                    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer);
+                    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, index.buffer);
                 }
             }
         }
