@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import Slider from '../components/slider';
 import { Mesh, PerspectiveCamera, Renderer, Scene, Texture } from '../core';
-import { CameraGeometry } from '../extras/camerageometry';
 import { ClipSpaceCubeGeometry } from '../extras/clipspacecubegeometry';
 import { OrbitControls } from '../extras/orbitcontrols';
 import { PlaneGeometry } from '../extras/planegeometry';
@@ -35,7 +34,7 @@ function useWebGL(fov: number, near: number, far: number) {
         let aspect = canvas.clientWidth / 2 / canvas.clientHeight;
 
         // camera
-        const camera = new PerspectiveCamera(70, aspect, 1, 1000);
+        const camera = new PerspectiveCamera(70, aspect, 0.1, 1000);
         camera.position.set(-3, 12, 18);
         camera.lookAt(0, 1, 0);
         new OrbitControls(camera, view.current!);
@@ -186,5 +185,3 @@ export default function PlanarProjectionMapping() {
         </div>
     );
 }
-
-new CameraGeometry();
