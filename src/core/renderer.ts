@@ -152,6 +152,14 @@ export class Renderer {
             }
         }
 
+        // 设置剔除面
+        if (mesh.side === 'DOUBLE') {
+            gl.disable(gl.CULL_FACE);
+        } else {
+            gl.enable(gl.CULL_FACE);
+            gl.cullFace(mesh.side === 'FRONT' ? gl.BACK : gl.FRONT);
+        }
+
         // 如果 mesh 的世界矩阵导致三角形顶点的顺逆顺序发生变化，需要调换正面与反面
         gl.frontFace(modelMatrix.determinant() > 0 ? gl.CCW : gl.CW);
 

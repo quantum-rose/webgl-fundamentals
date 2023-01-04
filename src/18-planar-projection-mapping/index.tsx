@@ -86,6 +86,7 @@ function useWebGL(fov: number, near: number, far: number) {
             shininess: 100,
             colorMult: new Color('skyblue'),
         });
+        ground.side = 'DOUBLE';
         ground.setParent(scene);
 
         // ball
