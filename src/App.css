@@ -1,6 +1,8 @@
 :root {
     width: 100%;
     height: 100%;
+    font-family: monospace;
+    user-select: none;
 }
 
 body {
@@ -41,8 +43,7 @@ canvas {
 
 .menu {
     margin: 0;
-    padding: 15px 20px;
-    list-style: none;
+    padding-top: 15px;
     background-color: #111;
     box-shadow: 2px 0 5px 0 rgba(82, 93, 107, 0.05);
 }
@@ -58,5 +59,5 @@ canvas {
 .menu-item:hover,
 .menu-item.selected {
     color: #fff;
-    filter: drop-shadow(1px -1px 4px #fff);
+    filter: drop-shadow(1px -1px 4px #fff) drop-shadow(-1px 1px 4px #fff);
 }

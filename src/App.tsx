@@ -24,13 +24,13 @@ function App() {
 
     return (
         <div className='App'>
-            <ul className='menu'>
+            <ol className='menu'>
                 {MenuConfig.map((item, idx) => (
                     <li key={item.id} className={`menu-item${menu.id === item.id ? ' selected' : ''}`} onClick={() => handleClickMenu(item)}>
-                        {`${idx + 1}. ${item.name}`}
+                        {item.name}
                     </li>
                 ))}
-            </ul>
+            </ol>
             <main className='container'>
                 <menu.component />
             </main>
