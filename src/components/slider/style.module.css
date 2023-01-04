@@ -6,7 +6,7 @@
     align-items: center;
     height: 24px;
     color: #dfdfdf;
-    font-size: 12px;
+    font-size: 13px;
     line-height: 24px;
     filter: drop-shadow(-1px -1px #000) drop-shadow(1px 1px #000) drop-shadow(-1px 1px #000) drop-shadow(1px -1px #000);
 }
