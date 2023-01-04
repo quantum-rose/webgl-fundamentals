@@ -25,7 +25,7 @@ function App() {
     return (
         <div className='App'>
             <ol className='menu'>
-                {MenuConfig.map((item, idx) => (
+                {MenuConfig.map(item => (
                     <li key={item.id} className={`menu-item${menu.id === item.id ? ' selected' : ''}`} onClick={() => handleClickMenu(item)}>
                         {item.name}
                     </li>
