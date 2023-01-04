@@ -21,8 +21,8 @@ export class BoxGeometry extends BufferGeometry {
     private static _faceIndices = [
         [3, 7, 5, 1], // right
         [6, 2, 0, 4], // left
-        [6, 7, 3, 2], // top
-        [0, 1, 5, 4], // bottom
+        [3, 2, 6, 7], // top
+        [5, 4, 0, 1], // bottom
         [7, 6, 4, 5], // front
         [2, 3, 1, 0], // back
     ] as const;
@@ -37,10 +37,10 @@ export class BoxGeometry extends BufferGeometry {
     ] as const;
 
     private static _uniqueUvs = [
-        [1, 0],
-        [0, 0],
-        [0, 1],
         [1, 1],
+        [0, 1],
+        [0, 0],
+        [1, 0],
     ] as const;
 
     public parameters: IBoxGeometryParameters;
