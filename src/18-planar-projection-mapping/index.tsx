@@ -122,7 +122,7 @@ function useWebGL(fov: number, near: number, far: number) {
             program.uniforms.projectedMatrix
                 .copy(projector.projectionMatrix)
                 .multiply(projector.matrixWorldInverse)
-                .scale(0.5, -0.5, 0.5)
+                .scale(0.5, 0.5, 0.5)
                 .translate(0.5, 0.5, 0.5);
             clipSpaceCubeProgram.uniforms.matrix.copy(projector.projectionMatrix).multiply(projector.matrixWorldInverse).invert();
 

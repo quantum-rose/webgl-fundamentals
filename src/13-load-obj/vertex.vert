@@ -19,7 +19,7 @@ varying vec4 v_color;
 varying vec3 v_cameraPos;
 
 void main() {
-    v_uv = vec2(uv.x, 1.0 - uv.y);
+    v_uv = uv;
     v_color = color;
     v_normal = normalize(mat3(normalMatrix) * normal);
     vec4 modelPos = modelViewMatrix * position;

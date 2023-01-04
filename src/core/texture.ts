@@ -44,6 +44,8 @@ export class Texture {
         });
     }
 
+    private static _defaultPixels = new Uint8Array([255, 255, 255, 255]);
+
     public target: TextureTarget = 'TEXTURE_2D';
 
     public level: number = 0;
@@ -58,9 +60,9 @@ export class Texture {
 
     public pixels: TexturePixels | null = null;
 
-    public width: number = 0;
+    public width: number = 1;
 
-    public height: number = 0;
+    public height: number = 1;
 
     public border: number = 0;
 
@@ -101,17 +103,24 @@ export class Texture {
 
     public unpackAlignment: TextureAlignment = 4;
 
+    public premultiplyAlpha: boolean = false;
+
+    public flipY: boolean = true;
+
     private _texture: WebGLTexture | null = null;
+
+    public needsUpdate: boolean;
 
     constructor(url: string);
     constructor(source: TextureSource);
-    constructor(pixels: TexturePixels, width: number, height: number);
-    constructor(source: TextureSource | TexturePixels | string, width?: number, height?: number) {
+    constructor(pixels: TexturePixels | null, width: number, height: number);
+    constructor(source: string | TextureSource | TexturePixels | null, width?: number, height?: number) {
         if (typeof source === 'string') {
             Texture.loadImage(source).then(image => {
                 this.source = image;
                 this.width = image.width;
                 this.height = image.height;
+                this.needsUpdate = true;
             });
         } else if (
             source instanceof ImageBitmap ||
@@ -139,21 +148,23 @@ export class Texture {
                 this.type = 'FLOAT';
             }
         }
+
+        this.needsUpdate = false;
     }
 
     public getWebGLTexture(gl: WebGLRenderingContext) {
-        if (!this.source && !this.pixels) {
-            return null;
-        }
-
-        if (this._texture) {
+        if (this._texture && !this.needsUpdate) {
             return this._texture;
         }
 
-        this._texture = gl.createTexture();
         if (!this._texture) {
-            throw 'unable to create texture';
+            this._texture = gl.createTexture();
+            if (!this._texture) {
+                throw 'unable to create texture';
+            }
         }
+
+        this.needsUpdate = false;
 
         const bindTarget = this.target === 'TEXTURE_2D' ? 'TEXTURE_2D' : 'TEXTURE_CUBE_MAP';
         gl.bindTexture(gl[bindTarget], this._texture);
@@ -175,8 +186,12 @@ export class Texture {
             minFilter,
             magFilter,
             unpackAlignment,
+            premultiplyAlpha,
+            flipY,
         } = this;
 
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, flipY);
+        gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, premultiplyAlpha);
         gl.pixelStorei(gl.UNPACK_ALIGNMENT, unpackAlignment);
 
         gl.texParameteri(gl[bindTarget], gl.TEXTURE_WRAP_S, gl[wrapS]);
@@ -186,8 +201,10 @@ export class Texture {
 
         if (source) {
             gl.texImage2D(gl[target], level, gl[internalformat], gl[format], gl[type], source);
-        } else {
+        } else if (pixels) {
             gl.texImage2D(gl[target], level, gl[internalformat], width, height, border, gl[format], gl[type], pixels);
+        } else {
+            gl.texImage2D(gl[target], 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, Texture._defaultPixels);
         }
 
         if (generateMipmaps && MathUtil.isPowerOf2(width) && MathUtil.isPowerOf2(height)) {
