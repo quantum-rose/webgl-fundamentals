@@ -63,7 +63,7 @@ function useWebGL() {
             colorMult: new Color('skyblue'),
         });
         cube3.position.setX(1);
-        cube3.rotateZ(Math.PI / 4);
+        cube3.rotateZ(-Math.PI / 4);
         cube3.setParent(scene);
 
         const rotationSpeed = Math.PI * 0.2;
