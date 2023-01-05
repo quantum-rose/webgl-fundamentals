@@ -8,5 +8,6 @@ export * from './orthographiccamera';
 export * from './perspectivecamera';
 export * from './program';
 export * from './renderer';
+export * from './rendertarget';
 export * from './scene';
 export * from './texture';

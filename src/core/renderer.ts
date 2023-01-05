@@ -3,6 +3,7 @@ import { WebGLUtil } from '../utils/webglutil';
 import { Camera } from './camera';
 import { Mesh } from './mesh';
 import { Program } from './program';
+import { RenderTarget } from './rendertarget';
 import { Scene } from './scene';
 
 export class Renderer {
@@ -101,10 +102,17 @@ export class Renderer {
         return renderList;
     }
 
-    public render(scene: Scene, camera: Camera) {
+    public render(scene: Scene, camera: Camera, renderTarget?: RenderTarget) {
         const { gl } = this;
-        const { background } = scene;
 
+        if (renderTarget) {
+            const framebuffer = renderTarget.getWebGLFramebuffer(gl);
+            gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+        } else {
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        }
+
+        const { background } = scene;
         if (background) {
             gl.clearColor(background.r, background.g, background.b, 1);
         } else {

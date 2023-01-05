@@ -111,6 +111,8 @@ export class Texture {
 
     public needsUpdate: boolean;
 
+    public isRenderTargetTexture: boolean;
+
     constructor(url: string);
     constructor(source: TextureSource);
     constructor(pixels: TexturePixels | null, width: number, height: number);
@@ -150,6 +152,7 @@ export class Texture {
         }
 
         this.needsUpdate = false;
+        this.isRenderTargetTexture = false;
     }
 
     public getWebGLTexture(gl: WebGLRenderingContext) {
@@ -201,7 +204,7 @@ export class Texture {
 
         if (source) {
             gl.texImage2D(gl[target], level, gl[internalformat], gl[format], gl[type], source);
-        } else if (pixels) {
+        } else if (pixels || this.isRenderTargetTexture) {
             gl.texImage2D(gl[target], level, gl[internalformat], width, height, border, gl[format], gl[type], pixels);
         } else {
             gl.texImage2D(gl[target], 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, Texture._defaultPixels);
