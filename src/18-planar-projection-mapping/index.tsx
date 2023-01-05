@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Slider from '../components/slider';
 import { Mesh, PerspectiveCamera, Renderer, Scene, Texture } from '../core';
+import { CheckerboardTexture } from '../extras/checkerboardtexture';
 import { ClipSpaceCubeGeometry } from '../extras/clipspacecubegeometry';
 import { OrbitControls } from '../extras/orbitcontrols';
 import { PlaneGeometry } from '../extras/planegeometry';
@@ -47,18 +48,7 @@ function useWebGL(fov: number, near: number, far: number) {
         new OrbitControls(projector, projectorView.current!);
 
         // texture
-        const texture = new Texture(
-            new Uint8Array([
-                0xff, 0xcc, 0xff, 0xcc, 0xff, 0xcc, 0xff, 0xcc, 0xcc, 0xff, 0xcc, 0xff, 0xcc, 0xff, 0xcc, 0xff, 0xff, 0xcc, 0xff, 0xcc, 0xff, 0xcc, 0xff, 0xcc,
-                0xcc, 0xff, 0xcc, 0xff, 0xcc, 0xff, 0xcc, 0xff, 0xff, 0xcc, 0xff, 0xcc, 0xff, 0xcc, 0xff, 0xcc, 0xcc, 0xff, 0xcc, 0xff, 0xcc, 0xff, 0xcc, 0xff,
-                0xff, 0xcc, 0xff, 0xcc, 0xff, 0xcc, 0xff, 0xcc, 0xcc, 0xff, 0xcc, 0xff, 0xcc, 0xff, 0xcc, 0xff,
-            ]),
-            8,
-            8
-        );
-        texture.format = 'LUMINANCE';
-        texture.internalformat = 'LUMINANCE';
-        texture.magFilter = 'NEAREST';
+        const texture = new CheckerboardTexture();
 
         const projectedTexture = new Texture('./uv-grid.png');
         projectedTexture.magFilter = 'NEAREST';
