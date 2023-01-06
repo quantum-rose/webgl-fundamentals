@@ -126,13 +126,14 @@ export class Renderer {
         camera.updateMatrixWorld();
 
         this._getRenderList(scene).forEach(mesh => {
-            this._draw(camera, mesh);
+            this._draw(scene, camera, mesh);
         });
     }
 
-    private _draw(camera: Camera, mesh: Mesh) {
+    private _draw(scene: Scene, camera: Camera, mesh: Mesh) {
         const { gl } = this;
-        const { geometry, program, matrixWorld: modelMatrix } = mesh;
+        const { geometry, matrixWorld: modelMatrix } = mesh;
+        const program = scene.overrideProgram ?? mesh.program;
 
         // 检查 program 是否相同
         const isDifferentProgram = this._currentProgramID !== program.id;

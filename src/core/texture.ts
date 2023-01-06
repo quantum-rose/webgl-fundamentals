@@ -9,7 +9,7 @@ export type TextureTarget =
     | 'TEXTURE_CUBE_MAP_POSITIVE_Z'
     | 'TEXTURE_CUBE_MAP_NEGATIVE_Z';
 
-export type Textureformat = 'RGB' | 'RGBA' | 'ALPHA' | 'LUMINANCE' | 'LUMINANCE_ALPHA';
+export type Textureformat = 'RGB' | 'RGBA' | 'ALPHA' | 'LUMINANCE' | 'LUMINANCE_ALPHA' | 'DEPTH_COMPONENT';
 
 export type TextureType =
     | 'UNSIGNED_BYTE'

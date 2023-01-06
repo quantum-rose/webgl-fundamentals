@@ -17,6 +17,7 @@ import MultipleViews from './16-multiple-views';
 import VisualizingTheCamera from './17-visualizing-the-camera';
 import PlanarProjectionMapping from './18-planar-projection-mapping';
 import RenderToTexture from './19-render-to-texture';
+import Shadows from './20-shadows';
 
 export interface Menu {
     id: number;
@@ -119,5 +120,10 @@ export const MenuConfig: Menu[] = [
         id: 18,
         name: 'Render To Texture',
         component: RenderToTexture,
+    },
+    {
+        id: 19,
+        name: 'Shadows',
+        component: Shadows,
     },
 ];
