@@ -135,13 +135,14 @@ export class Renderer {
         const { geometry, program, matrixWorld: modelMatrix } = mesh;
 
         // 检查 program 是否相同
-        if (this._currentProgramID !== program.id) {
+        const isDifferentProgram = this._currentProgramID !== program.id;
+        if (isDifferentProgram) {
             this._currentProgramID = program.id;
             this.gl.useProgram(program.program);
         }
 
-        // 检查 geometry 是否相同, 如果不同需要重新设置 attribute
-        if (this._currentGeometryID !== geometry.id) {
+        // 如果 program 不同或者 geometry 不同，都需要重新设置 attribute
+        if (isDifferentProgram || this._currentGeometryID !== geometry.id) {
             this._currentGeometryID = geometry.id;
             program.attributeSetters.forEach((setter, name) => setter(geometry.attributes.get(name)));
 
