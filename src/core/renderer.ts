@@ -182,9 +182,10 @@ export class Renderer {
         program.uniforms.projectionMatrix = camera.projectionMatrix;
         program.uniforms.cameraPosition = camera.position;
         program.uniforms.normalMatrix = modelViewMatrix.clone().invert().transpose();
-        Object.assign(program.uniforms, mesh.uniforms);
         program.uniformSetters.forEach((setter, name) => {
-            if (program.uniforms.hasOwnProperty(name)) {
+            if (mesh.uniforms.hasOwnProperty(name)) {
+                setter(mesh.uniforms[name]);
+            } else if (program.uniforms.hasOwnProperty(name)) {
                 setter(program.uniforms[name]);
             }
         });
