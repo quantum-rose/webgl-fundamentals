@@ -234,6 +234,62 @@ export class WebGLUtil {
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(WebGLUtil.getFNormals()), gl.STATIC_DRAW);
     }
 
+    public static getFTexcoords() {
+        return [
+            // left column front
+            0.149, 0.172, 0.149, 0.874, 0.443, 0.172, 0.149, 0.874, 0.443, 0.874, 0.443, 0.172,
+
+            // top rung front
+            0.443, 0.172, 0.443, 0.333, 0.854, 0.172, 0.443, 0.333, 0.854, 0.333, 0.854, 0.172,
+
+            // middle rung front
+            0.443, 0.439, 0.443, 0.592, 0.796, 0.439, 0.443, 0.592, 0.796, 0.592, 0.796, 0.439,
+
+            // left column back
+            0.149, 0.172, 0.443, 0.172, 0.149, 0.874, 0.149, 0.874, 0.443, 0.172, 0.443, 0.874,
+
+            // top rung back
+            0.443, 0.172, 0.854, 0.172, 0.443, 0.333, 0.443, 0.333, 0.854, 0.172, 0.854, 0.333,
+
+            // middle rung back
+            0.443, 0.439, 0.796, 0.439, 0.443, 0.592, 0.443, 0.592, 0.796, 0.439, 0.796, 0.592,
+
+            // top
+            0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1,
+
+            // top rung right
+            0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1,
+
+            // under top rung
+            0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0,
+
+            // between top rung and middle
+            0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1,
+
+            // top of middle rung
+            0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1,
+
+            // right of middle rung
+            0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1,
+
+            // bottom of middle rung.
+            0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0,
+
+            // right of bottom
+            0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1,
+
+            // bottom
+            0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0,
+
+            // left side
+            0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0,
+        ];
+    }
+
+    public static setFTexcoords(gl: WebGLRenderingContext) {
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(WebGLUtil.getFTexcoords()), gl.STATIC_DRAW);
+    }
+
     public static arrayNeedsUint32(array: number[]) {
         // 倒序遍历，较大的值通常在后面
         for (let i = array.length - 1; i >= 0; --i) {
