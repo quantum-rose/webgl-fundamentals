@@ -40,6 +40,7 @@ export class Renderer {
         gl.clear(gl.COLOR_BUFFER_BIT);
 
         gl.getExtension('OES_element_index_uint');
+        gl.getExtension('WEBGL_depth_texture');
     }
 
     public createProgram(vertex: string, fragment: string, uniforms?: Uniforms) {
