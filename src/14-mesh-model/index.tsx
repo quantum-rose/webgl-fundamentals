@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { Group, Mesh, Object3D, OrthographicCamera, Renderer, Scene } from '../core';
-import { BowlingPinGeometry } from '../extras/bowlingpingeometry';
 import { OBJLoader } from '../extras/objloader';
 import { OrbitControls } from '../extras/orbitcontrols';
+import { BowlingPinGeometry } from '../geometries/bowlingpingeometry';
 import { Vector3 } from '../math';
 import fragment from './fragment.frag';
 import vertex from './vertex.vert';

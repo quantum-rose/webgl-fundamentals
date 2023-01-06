@@ -1,8 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { BufferAttribute, BufferGeometry, Mesh, PerspectiveCamera, Renderer, Scene } from '../core';
-import { BoxGeometry } from '../extras/boxgeometry';
 import { OrbitControls } from '../extras/orbitcontrols';
-import { SphereGeometry } from '../extras/spheregeometry';
+import { BoxGeometry, SphereGeometry } from '../geometries';
 import { Vector3 } from '../math';
 import { WebGLUtil } from '../utils/webglutil';
 import basicFragment from './basic.frag';

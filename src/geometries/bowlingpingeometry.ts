@@ -1,6 +1,6 @@
 import { BufferAttribute, BufferGeometry } from '../core';
+import { BezierSegment } from '../extras/beziersegment';
 import { Matrix4, Vector2, Vector3 } from '../math';
-import { BezierSegment } from './beziersegment';
 
 interface IDiscretePoint {
     point: Vector2;

@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import Slider from '../components/slider';
 import { BufferAttribute, BufferGeometry, Mesh, OrthographicCamera, PerspectiveCamera, Renderer, Scene } from '../core';
-import { CameraGeometry } from '../extras/camerageometry';
-import { ClipSpaceCubeGeometry } from '../extras/clipspacecubegeometry';
 import { OrbitControls } from '../extras/orbitcontrols';
+import { CameraGeometry, ClipSpaceCubeGeometry } from '../geometries';
 import { Matrix4 } from '../math';
 import { WebGLUtil } from '../utils/webglutil';
 import clipSpaceCubeVertex from './clipspacecube.vert';

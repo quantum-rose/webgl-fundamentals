@@ -1,8 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Group, Mesh, Object3D, PerspectiveCamera, Renderer, Scene } from '../core';
-import { BoxGeometry } from '../extras/boxgeometry';
 import { OrbitControls } from '../extras/orbitcontrols';
-import { SphereGeometry } from '../extras/spheregeometry';
+import { BoxGeometry, SphereGeometry } from '../geometries';
 import { Color } from '../math/color';
 import { WebGLUtil } from '../utils/webglutil';
 import blockGuyFragment from './blockguy.frag';

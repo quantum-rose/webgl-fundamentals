@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Mesh, PerspectiveCamera, Renderer, RenderTarget, Scene, Texture } from '../core';
-import { BoxGeometry } from '../extras/boxgeometry';
 import { OrbitControls } from '../extras/orbitcontrols';
+import { BoxGeometry } from '../geometries';
 import { Color } from '../math';
 import { WebGLUtil } from '../utils/webglutil';
 import fragment from './fragment.frag';

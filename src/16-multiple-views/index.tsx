@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { BufferAttribute, BufferGeometry, Group, Mesh, Object3D, PerspectiveCamera, Renderer, Scene } from '../core';
-import { BowlingPinGeometry } from '../extras/bowlingpingeometry';
-import { BoxGeometry } from '../extras/boxgeometry';
-import { SphereGeometry } from '../extras/spheregeometry';
+import { BoxGeometry, SphereGeometry } from '../geometries';
+import { BowlingPinGeometry } from '../geometries/bowlingpingeometry';
 import { Color, Vector3 } from '../math';
 import { WebGLUtil } from '../utils/webglutil';
 import fragment from './fragment.frag';

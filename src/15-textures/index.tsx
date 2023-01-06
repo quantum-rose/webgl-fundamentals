@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Mesh, PerspectiveCamera, Renderer, Scene, Texture } from '../core';
-import { BoxGeometry } from '../extras/boxgeometry';
 import { OrbitControls } from '../extras/orbitcontrols';
+import { BoxGeometry } from '../geometries';
 import fragment from './fragment.frag';
 import vertex from './vertex.vert';
 
