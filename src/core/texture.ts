@@ -118,6 +118,9 @@ export class Texture {
     constructor(pixels: TexturePixels | TexturePixels[] | null, width: number, height: number);
     constructor(data: string | string[] | TextureSource | TextureSource[] | TexturePixels | TexturePixels[] | null, width?: number, height?: number) {
         if (Array.isArray(data)) {
+            this.target = 'TEXTURE_CUBE_MAP';
+            this.flipY = false;
+
             const sample = data[0];
             if (typeof sample === 'string') {
                 Promise.all(data.map(item => Texture.loadImage(item as string))).then(images => {
@@ -130,8 +133,6 @@ export class Texture {
             } else {
                 this._setData(data as TextureSource[], sample.width, sample.height);
             }
-
-            this.target = 'TEXTURE_CUBE_MAP';
         } else if (typeof data === 'string') {
             Texture.loadImage(data).then(image => {
                 this._setData(image, image.width, image.height);
@@ -152,6 +153,7 @@ export class Texture {
         this.data = data;
         this.width = width;
         this.height = height;
+        this.generateMipmaps = MathUtil.isPowerOf2(width) && MathUtil.isPowerOf2(height);
     }
 
     private _setTypeFromPixels(pixels: TexturePixels | null) {
