@@ -18,6 +18,7 @@ import VisualizingTheCamera from './17-visualizing-the-camera';
 import PlanarProjectionMapping from './18-planar-projection-mapping';
 import RenderToTexture from './19-render-to-texture';
 import Shadows from './20-shadows';
+import CubeMaps from './21-cube-maps';
 
 export interface Menu {
     id: number;
@@ -125,5 +126,10 @@ export const MenuConfig: Menu[] = [
         id: 19,
         name: 'Shadows',
         component: Shadows,
+    },
+    {
+        id: 20,
+        name: 'Cube Maps',
+        component: CubeMaps,
     },
 ];

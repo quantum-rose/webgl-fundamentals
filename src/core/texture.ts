@@ -1,13 +1,6 @@
 import { MathUtil } from '../utils/mathutil';
 
-export type TextureTarget =
-    | 'TEXTURE_2D'
-    | 'TEXTURE_CUBE_MAP_POSITIVE_X'
-    | 'TEXTURE_CUBE_MAP_NEGATIVE_X'
-    | 'TEXTURE_CUBE_MAP_POSITIVE_Y'
-    | 'TEXTURE_CUBE_MAP_NEGATIVE_Y'
-    | 'TEXTURE_CUBE_MAP_POSITIVE_Z'
-    | 'TEXTURE_CUBE_MAP_NEGATIVE_Z';
+export type TextureTarget = 'TEXTURE_2D' | 'TEXTURE_CUBE_MAP';
 
 export type Textureformat = 'RGB' | 'RGBA' | 'ALPHA' | 'LUMINANCE' | 'LUMINANCE_ALPHA' | 'DEPTH_COMPONENT';
 
@@ -32,7 +25,18 @@ export type TextureMinFilter = 'LINEAR' | 'NEAREST' | 'NEAREST_MIPMAP_NEAREST' |
 
 export type TextureAlignment = 1 | 2 | 4 | 8;
 
+const CubeMapFaces = [
+    'TEXTURE_CUBE_MAP_POSITIVE_X',
+    'TEXTURE_CUBE_MAP_NEGATIVE_X',
+    'TEXTURE_CUBE_MAP_POSITIVE_Y',
+    'TEXTURE_CUBE_MAP_NEGATIVE_Y',
+    'TEXTURE_CUBE_MAP_POSITIVE_Z',
+    'TEXTURE_CUBE_MAP_NEGATIVE_Z',
+] as const;
+
 export class Texture {
+    public static defaultPixels = new Uint8Array([255, 255, 255, 255]);
+
     public static loadImage(url: string) {
         const image = new Image();
         if (new URL(url, window.location.href).origin !== window.location.origin) {
@@ -44,8 +48,6 @@ export class Texture {
         });
     }
 
-    private static _defaultPixels = new Uint8Array([255, 255, 255, 255]);
-
     public target: TextureTarget = 'TEXTURE_2D';
 
     public level: number = 0;
@@ -56,9 +58,7 @@ export class Texture {
 
     public type: TextureType = 'UNSIGNED_BYTE';
 
-    public source: TexImageSource | null = null;
-
-    public pixels: TexturePixels | null = null;
+    public data: TexImageSource | TexImageSource[] | TexturePixels | TexturePixels[] | null = null;
 
     public width: number = 1;
 
@@ -113,46 +113,57 @@ export class Texture {
 
     public isRenderTargetTexture: boolean;
 
-    constructor(url: string);
-    constructor(source: TextureSource);
-    constructor(pixels: TexturePixels | null, width: number, height: number);
-    constructor(source: string | TextureSource | TexturePixels | null, width?: number, height?: number) {
-        if (typeof source === 'string') {
-            Texture.loadImage(source).then(image => {
-                this.source = image;
-                this.width = image.width;
-                this.height = image.height;
+    constructor(url: string | string[]);
+    constructor(source: TextureSource | TextureSource[]);
+    constructor(pixels: TexturePixels | TexturePixels[] | null, width: number, height: number);
+    constructor(data: string | string[] | TextureSource | TextureSource[] | TexturePixels | TexturePixels[] | null, width?: number, height?: number) {
+        if (Array.isArray(data)) {
+            const sample = data[0];
+            if (typeof sample === 'string') {
+                Promise.all(data.map(item => Texture.loadImage(item as string))).then(images => {
+                    this._setData(images, images[0].width, images[0].height);
+                    this.needsUpdate = true;
+                });
+            } else if (ArrayBuffer.isView(sample)) {
+                this._setData(data as TexturePixels[], width!, height!);
+                this._setTypeFromPixels(sample);
+            } else {
+                this._setData(data as TextureSource[], sample.width, sample.height);
+            }
+
+            this.target = 'TEXTURE_CUBE_MAP';
+        } else if (typeof data === 'string') {
+            Texture.loadImage(data).then(image => {
+                this._setData(image, image.width, image.height);
                 this.needsUpdate = true;
             });
-        } else if (
-            source instanceof ImageBitmap ||
-            source instanceof ImageData ||
-            source instanceof HTMLImageElement ||
-            source instanceof HTMLCanvasElement ||
-            source instanceof HTMLVideoElement ||
-            source instanceof OffscreenCanvas
-        ) {
-            this.source = source;
-            this.width = source.width;
-            this.height = source.height;
+        } else if (!data || ArrayBuffer.isView(data)) {
+            this._setData(data, width!, height!);
+            this._setTypeFromPixels(data);
         } else {
-            this.pixels = source;
-            this.width = width!;
-            this.height = height!;
-
-            if (source instanceof Uint8Array) {
-                this.type = 'UNSIGNED_BYTE';
-            } else if (source instanceof Uint16Array) {
-                this.type = 'UNSIGNED_SHORT';
-            } else if (source instanceof Uint32Array) {
-                this.type = 'UNSIGNED_INT';
-            } else if (source instanceof Float32Array) {
-                this.type = 'FLOAT';
-            }
+            this._setData(data, data.width, data.height);
         }
 
         this.needsUpdate = false;
         this.isRenderTargetTexture = false;
+    }
+
+    private _setData(data: TextureSource | TextureSource[] | TexturePixels | TexturePixels[] | null, width: number, height: number) {
+        this.data = data;
+        this.width = width;
+        this.height = height;
+    }
+
+    private _setTypeFromPixels(pixels: TexturePixels | null) {
+        if (pixels instanceof Float32Array) {
+            this.type = 'FLOAT';
+        } else if (pixels instanceof Uint32Array) {
+            this.type = 'UNSIGNED_INT';
+        } else if (pixels instanceof Uint16Array) {
+            this.type = 'UNSIGNED_SHORT';
+        } else {
+            this.type = 'UNSIGNED_BYTE';
+        }
     }
 
     public getWebGLTexture(gl: WebGLRenderingContext) {
@@ -169,17 +180,13 @@ export class Texture {
 
         this.needsUpdate = false;
 
-        const bindTarget = this.target === 'TEXTURE_2D' ? 'TEXTURE_2D' : 'TEXTURE_CUBE_MAP';
-        gl.bindTexture(gl[bindTarget], this._texture);
-
         const {
             target,
             level,
             internalformat,
             format,
             type,
-            source,
-            pixels,
+            data,
             width,
             height,
             border,
@@ -193,25 +200,50 @@ export class Texture {
             flipY,
         } = this;
 
+        gl.bindTexture(gl[target], this._texture);
+
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, flipY);
         gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, premultiplyAlpha);
         gl.pixelStorei(gl.UNPACK_ALIGNMENT, unpackAlignment);
 
-        gl.texParameteri(gl[bindTarget], gl.TEXTURE_WRAP_S, gl[wrapS]);
-        gl.texParameteri(gl[bindTarget], gl.TEXTURE_WRAP_T, gl[wrapT]);
-        gl.texParameteri(gl[bindTarget], gl.TEXTURE_MIN_FILTER, gl[minFilter]);
-        gl.texParameteri(gl[bindTarget], gl.TEXTURE_MAG_FILTER, gl[magFilter]);
+        gl.texParameteri(gl[target], gl.TEXTURE_WRAP_S, gl[wrapS]);
+        gl.texParameteri(gl[target], gl.TEXTURE_WRAP_T, gl[wrapT]);
+        gl.texParameteri(gl[target], gl.TEXTURE_MIN_FILTER, gl[minFilter]);
+        gl.texParameteri(gl[target], gl.TEXTURE_MAG_FILTER, gl[magFilter]);
 
-        if (source) {
-            gl.texImage2D(gl[target], level, gl[internalformat], gl[format], gl[type], source);
-        } else if (pixels || this.isRenderTargetTexture) {
-            gl.texImage2D(gl[target], level, gl[internalformat], width, height, border, gl[format], gl[type], pixels);
+        if (data) {
+            if (Array.isArray(data)) {
+                for (let i = 0; i < 6; i++) {
+                    const item = data[i];
+                    if (ArrayBuffer.isView(item)) {
+                        gl.texImage2D(gl[CubeMapFaces[i]], level, gl[internalformat], width, height, border, gl[format], gl[type], item);
+                    } else {
+                        gl.texImage2D(gl[CubeMapFaces[i]], level, gl[internalformat], gl[format], gl[type], item);
+                    }
+                }
+            } else if (ArrayBuffer.isView(data)) {
+                gl.texImage2D(gl[target], level, gl[internalformat], width, height, border, gl[format], gl[type], data);
+            } else {
+                gl.texImage2D(gl[target], level, gl[internalformat], gl[format], gl[type], data);
+            }
         } else {
-            gl.texImage2D(gl[target], 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, Texture._defaultPixels);
+            if (target === 'TEXTURE_CUBE_MAP') {
+                for (let i = 0; i < 6; i++) {
+                    if (this.isRenderTargetTexture) {
+                        gl.texImage2D(gl[CubeMapFaces[i]], level, gl[internalformat], width, height, border, gl[format], gl[type], null);
+                    } else {
+                        gl.texImage2D(gl[CubeMapFaces[i]], 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, Texture.defaultPixels);
+                    }
+                }
+            } else if (this.isRenderTargetTexture) {
+                gl.texImage2D(gl[target], level, gl[internalformat], width, height, border, gl[format], gl[type], null);
+            } else {
+                gl.texImage2D(gl[target], 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, Texture.defaultPixels);
+            }
         }
 
         if (generateMipmaps && MathUtil.isPowerOf2(width) && MathUtil.isPowerOf2(height)) {
-            gl.generateMipmap(gl[bindTarget]);
+            gl.generateMipmap(gl[target]);
         }
 
         return this._texture;
