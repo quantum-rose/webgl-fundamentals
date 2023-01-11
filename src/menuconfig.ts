@@ -20,6 +20,7 @@ import RenderToTexture from './19-render-to-texture';
 import Shadows from './20-shadows';
 import CubeMaps from './21-cube-maps';
 import EnvironmentMaps from './22-environment-maps';
+import Skybox from './23-skybox';
 
 export interface Menu {
     id: number;
@@ -137,5 +138,10 @@ export const MenuConfig: Menu[] = [
         id: 21,
         name: 'Environment Maps',
         component: EnvironmentMaps,
+    },
+    {
+        id: 22,
+        name: 'Skybox',
+        component: Skybox,
     },
 ];

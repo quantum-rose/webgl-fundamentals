@@ -75,6 +75,10 @@ export class Matrix4 extends Array<number> {
         return Matrix4Function.getPosition(new Array<number>(3), this);
     }
 
+    public setPosition(x: number, y: number, z: number) {
+        return Matrix4Function.setPosition(this, x, y, z);
+    }
+
     public setFromBasis(xAxis: number[], yAxis: number[], zAxis: number[]) {
         return Matrix4Function.setFromBasis(this, xAxis, yAxis, zAxis);
     }

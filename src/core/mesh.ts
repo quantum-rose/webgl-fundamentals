@@ -8,6 +8,8 @@ export type DrawMode = 'POINTS' | 'LINE_STRIP' | 'LINE_LOOP' | 'LINES' | 'TRIANG
 
 export type DrawSide = 'FRONT' | 'BACK' | 'DOUBLE';
 
+export type DepthFunc = 'NEVER' | 'LESS' | 'EQUAL' | 'LEQUAL' | 'GREATER' | 'NOTEQUAL' | 'GEQUAL' | 'ALWAYS';
+
 export class Mesh extends Object3D {
     public static classId = Object3DClass.Mesh;
 
@@ -23,6 +25,8 @@ export class Mesh extends Object3D {
 
     public side: DrawSide;
 
+    public depthFunc: DepthFunc;
+
     constructor(geometry: BufferGeometry, program: Program, uniforms: Uniforms = {}) {
         super();
         this.geometry = geometry;
@@ -30,5 +34,6 @@ export class Mesh extends Object3D {
         this.uniforms = uniforms;
         this.mode = 'TRIANGLES';
         this.side = 'FRONT';
+        this.depthFunc = 'LESS';
     }
 }

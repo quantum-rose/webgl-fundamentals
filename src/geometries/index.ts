@@ -4,3 +4,4 @@ export * from './camerageometry';
 export * from './clipspacecubegeometry';
 export * from './planegeometry';
 export * from './spheregeometry';
+export * from './waterdropgeometry';

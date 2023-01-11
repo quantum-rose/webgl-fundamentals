@@ -171,6 +171,9 @@ export class Renderer {
             gl.cullFace(mesh.side === 'FRONT' ? gl.BACK : gl.FRONT);
         }
 
+        // 设置深度比较函数
+        gl.depthFunc(gl[mesh.depthFunc]);
+
         // 如果 mesh 的世界矩阵导致三角形顶点的顺逆顺序发生变化，需要调换正面与反面
         gl.frontFace(modelMatrix.determinant() > 0 ? gl.CCW : gl.CW);
 

@@ -189,6 +189,13 @@ export class Matrix4Function {
         return out;
     }
 
+    public static setPosition<T extends Array<number>>(out: T, x: number, y: number, z: number) {
+        out[12] = x;
+        out[13] = y;
+        out[14] = z;
+        return out;
+    }
+
     public static getScaling<T extends Array<number>>(out: T, m: number[]) {
         let m11 = m[0];
         let m12 = m[1];
