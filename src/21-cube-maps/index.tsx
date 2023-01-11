@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Mesh, PerspectiveCamera, Renderer, Scene, Texture } from '../core';
 import { OrbitControls } from '../extras/orbitcontrols';
-import { BoxGeometry } from '../geometries';
+import { BoxGeometry, SphereGeometry } from '../geometries';
 import { Color, Vector3 } from '../math';
 import { WebGLUtil } from '../utils/webglutil';
 import fragment from './fragment.frag';
@@ -68,7 +68,7 @@ function useWebGL() {
 
         // camera
         const camera = new PerspectiveCamera(35, aspect, 1, 1000);
-        camera.position.set(4, 1, 2);
+        camera.position.set(0, 1, 5);
         new OrbitControls(camera, canvas);
 
         // light
@@ -107,7 +107,14 @@ function useWebGL() {
         // cube
         const cubeGeometry = new BoxGeometry(1);
         const cube = new Mesh(cubeGeometry, program);
+        cube.position.setX(-1);
         cube.setParent(scene);
+
+        // ball
+        const ballGeometry = new SphereGeometry(0.618, 128, 64);
+        const ball = new Mesh(ballGeometry, program);
+        ball.position.setX(1);
+        ball.setParent(scene);
 
         const rotationSpeed = Math.PI * 0.4;
 
@@ -119,6 +126,7 @@ function useWebGL() {
             then = now;
 
             cube.rotateY(angle);
+            ball.rotateY(angle);
 
             if (WebGLUtil.resizeCanvasToDisplaySize(canvas)) {
                 aspect = canvas.clientWidth / canvas.clientHeight;
