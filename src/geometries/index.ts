@@ -1,3 +1,4 @@
+export * from './beziergeometry';
 export * from './bowlingpingeometry';
 export * from './boxgeometry';
 export * from './camerageometry';

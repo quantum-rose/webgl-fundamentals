@@ -28,11 +28,11 @@ export class BezierSegment {
     }
 
     /**
-     * 获取该点的法向量，位于线段左侧
+     * 获取该点的法向量，位于线段右侧
      */
     public getNormalAt(t: number) {
         const tangent = this.getTangentAt(t);
-        return tangent.rotate(Math.PI / 2);
+        return tangent.rotate(-Math.PI / 2);
     }
 
     /**
