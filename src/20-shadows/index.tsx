@@ -74,7 +74,7 @@ function useWebGL() {
         const faceGeometry = new PlaneGeometry(14, 14);
         const cubeGeometry = new BoxGeometry(1);
         const ballGeometry = new SphereGeometry(0.707, 64, 32);
-        const bowlingPinGeometry = new BowlingPinGeometry(128, 32);
+        const bowlingPinGeometry = new BowlingPinGeometry(128);
         const fGeometry = new BufferGeometry();
         fGeometry.setAttribute('position', new BufferAttribute(new Float32Array(WebGLUtil.getFGeometry()), 3));
         fGeometry.setAttribute('normal', new BufferAttribute(new Float32Array(WebGLUtil.getFNormals()), 3));
@@ -112,8 +112,6 @@ function useWebGL() {
         const bowlingPinMesh = new Mesh(bowlingPinGeometry, program, {
             map: uvGrid,
         });
-        bowlingPinMesh.scale.set(0.01, -0.01, 0.01);
-        bowlingPinMesh.position.setY(3.7);
         bowlingPinMesh.setParent(bowlingPin);
 
         const f = new Group();
@@ -141,7 +139,7 @@ function useWebGL() {
             ball.position.setX(a);
             ball.position.setZ(a);
             f.rotateY(-2 * angle);
-            const s = Math.abs(p) + 0.1;
+            const s = Math.abs(p * 2) + 0.1;
             bowlingPin.scale.set(s, s, s);
 
             spotLightPosition.applyAxisAngle([0, 1, 0], angle);

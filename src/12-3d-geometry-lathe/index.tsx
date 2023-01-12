@@ -19,13 +19,14 @@ function useWebGL() {
         const scene = new Scene();
 
         // camera
-        const camera = new PerspectiveCamera(70, canvas.clientWidth / canvas.clientHeight, 1, 1000);
+        const camera = new PerspectiveCamera(70, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+        camera.position.set(0, 0, 2);
 
         // controls
         const controls = new OrbitControls(camera, canvas);
 
-        const geometry = new BowlingPinGeometry(32, 8);
-        const pointLightPosition = new Vector3(800, 800, 800);
+        const geometry = new BowlingPinGeometry(64);
+        const pointLightPosition = new Vector3(8, 8, 8);
         const pointLightRotationAxis = [-1, 0, 1];
         const program = renderer.createProgram(vertex, fragment, {
             ambientLightColor: [0.04, 0.04, 0.04],
@@ -35,11 +36,8 @@ function useWebGL() {
             uvGrid: new Texture('./uv-grid.png'),
         });
         const mesh = new Mesh(geometry, program);
-        mesh.scale.setY(-1);
+        mesh.position.setY(-1);
         mesh.setParent(scene);
-
-        camera.position.set(0, -178, 400);
-        camera.lookAt(0, -178, 0);
 
         const rotationSpeed = Math.PI * 0.1;
 

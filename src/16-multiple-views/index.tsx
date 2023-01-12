@@ -62,8 +62,7 @@ function useWebGL() {
         bowlingPin.setParent(scene);
         const bowlingPinGeometry = new BowlingPinGeometry();
         const bowlingPinMesh = new Mesh(bowlingPinGeometry, program);
-        bowlingPinMesh.scale.set(0.005, -0.005, 0.005);
-        bowlingPinMesh.position.setY(0.9);
+        bowlingPinMesh.position.setY(-1);
         bowlingPinMesh.setParent(bowlingPin);
 
         // F

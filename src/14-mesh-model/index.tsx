@@ -43,8 +43,8 @@ function useWebGL() {
             shininess: 200,
         });
         bowlingPin.mode = 'LINES';
-        bowlingPin.scale.set(0.015, -0.015, 0.015);
-        bowlingPin.position.set(-5, 3, 0);
+        bowlingPin.scale.set(3, 3, 3);
+        bowlingPin.position.set(-5, -3, 0);
         bowlingPin.setParent(scene);
 
         let cube: Object3D | undefined;
