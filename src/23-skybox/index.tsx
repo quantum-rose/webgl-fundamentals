@@ -46,7 +46,7 @@ function useWebGL() {
         });
         const waterDrop = new Mesh(waterDropGeometry, reflectProgram);
         waterDrop.scale.set(1, 1.5, 1);
-        waterDrop.rotateZ(-Math.PI / 2);
+        waterDrop.rotateZ(Math.PI / 2);
         waterDrop.setParent(scene);
 
         // skybox
