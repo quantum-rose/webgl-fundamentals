@@ -29,8 +29,6 @@ function useWebGL() {
         camera.position.set(-2, 2, -2);
         new OrbitControls(camera, canvas);
 
-        (window as any).CCC = camera;
-
         // texture
         const cubeTexture = new Texture([
             'GalaxyTex_PositiveX.png',
