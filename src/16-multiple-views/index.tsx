@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { BufferAttribute, BufferGeometry, Group, Mesh, Object3D, PerspectiveCamera, Renderer, Scene } from '../core';
-import { BoxGeometry, SphereGeometry } from '../geometries';
+import { BoxGeometry, SphereGeometry, WaterDropGeometry } from '../geometries';
 import { BowlingPinGeometry } from '../geometries/bowlingpingeometry';
 import { Color, Vector3 } from '../math';
 import { WebGLUtil } from '../utils/webglutil';
@@ -77,10 +77,21 @@ function useWebGL() {
         fMesh.position.set(-0.5, 0.75, -0.15);
         fMesh.setParent(f);
 
-        const objects = [cube, ball, bowlingPin, f] as const;
+        // 水滴
+        const waterDrop = new Group();
+        waterDrop.rotateZ(Math.PI / 4);
+        waterDrop.position.setX(16);
+        waterDrop.setParent(scene);
+        const waterDropGeometry = new WaterDropGeometry();
+        const waterDropMesh = new Mesh(waterDropGeometry, program);
+        waterDropMesh.position.setY(-0.2);
+        waterDropMesh.scale.set(1.2, 1.2, 1.2);
+        waterDropMesh.setParent(waterDrop);
+
+        const objects = [cube, ball, bowlingPin, f, waterDrop] as const;
         const items: IItem[] = viewRefs.current.map(item => {
             return {
-                object: objects[Math.floor(Math.random() * 4)],
+                object: objects[Math.floor(Math.random() * 5)],
                 element: item!,
                 background: new Color(Math.floor(Math.random() * 256), Math.floor(Math.random() * 256), Math.floor(Math.random() * 256)),
             };
@@ -103,6 +114,7 @@ function useWebGL() {
             ball.rotateOnAxis(rotationAxis, angle);
             bowlingPin.rotateY(angle);
             f.rotateY(angle);
+            waterDrop.rotateY(angle);
 
             if (WebGLUtil.resizeCanvasToDisplaySize(canvas)) {
                 canvasBound = canvas.getBoundingClientRect();
