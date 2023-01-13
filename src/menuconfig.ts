@@ -21,6 +21,7 @@ import Shadows from './20-shadows';
 import CubeMaps from './21-cube-maps';
 import EnvironmentMaps from './22-environment-maps';
 import Skybox from './23-skybox';
+import Fog from './24-fog';
 
 export interface Menu {
     id: number;
@@ -143,5 +144,10 @@ export const MenuConfig: Menu[] = [
         id: 22,
         name: 'Skybox',
         component: Skybox,
+    },
+    {
+        id: 23,
+        name: 'Fog',
+        component: Fog,
     },
 ];
