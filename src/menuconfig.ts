@@ -22,6 +22,7 @@ import CubeMaps from './21-cube-maps';
 import EnvironmentMaps from './22-environment-maps';
 import Skybox from './23-skybox';
 import Fog from './24-fog';
+import GameOfLife from './25-game-of-life';
 
 export interface Menu {
     id: number;
@@ -149,5 +150,10 @@ export const MenuConfig: Menu[] = [
         id: 23,
         name: 'Fog',
         component: Fog,
+    },
+    {
+        id: 24,
+        name: 'Game of Life',
+        component: GameOfLife,
     },
 ];
