@@ -142,7 +142,7 @@ function useWebGL() {
     return [canvasRef] as const;
 }
 
-export default function MeshModel() {
+export default function WireframeModel() {
     const [canvasRef] = useWebGL();
 
     return <canvas ref={canvasRef} />;
