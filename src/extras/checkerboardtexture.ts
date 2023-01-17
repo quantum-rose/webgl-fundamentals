@@ -2,11 +2,11 @@ import { Texture } from '../core';
 import { MathUtil } from '../utils/mathutil';
 
 export class CheckerboardTexture extends Texture {
-    constructor(width = 8, height = 8) {
+    constructor(width = 8, height = 8, luminance1 = 0xcc, luminance2 = 0xff) {
         const pixels = new Uint8Array(width * height);
         for (let row = 0; row < height; row++) {
             for (let col = 0; col < width; col++) {
-                pixels[row * width + col] = (row + col) % 2 ? 0xcc : 0xff;
+                pixels[row * width + col] = (row + col) % 2 ? luminance1 : luminance2;
             }
         }
 

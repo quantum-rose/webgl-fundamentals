@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Mesh, OrthographicCamera, Renderer, RenderTarget, Scene } from '../core';
+import { CheckerboardTexture } from '../extras/checkerboardtexture';
 import { PlanControls } from '../extras/planecontrols';
 import { PlaneGeometry } from '../geometries';
 import { WebGLUtil } from '../utils/webglutil';
@@ -25,7 +26,7 @@ function useWebGL() {
         const initialData: number[] = [];
         for (let i = 0; i < pixelsNum; i++) {
             const offset = i * 4;
-            const cell = Math.random() < 0.5 ? 0 : 255;
+            const cell = Math.random() < 0.6 ? 0 : 255;
             initialData[offset + 0] = cell;
             initialData[offset + 1] = cell;
             initialData[offset + 2] = cell;
@@ -33,7 +34,7 @@ function useWebGL() {
         }
 
         // camera
-        const cellSize = 32;
+        const cellSize = 8;
         let halfW = canvas.clientWidth / 2 / cellSize;
         let halfH = (halfW * canvas.clientHeight) / canvas.clientWidth;
         const camera = new OrthographicCamera(-halfW, halfW, halfH, -halfH, -100, 100);
@@ -63,7 +64,7 @@ function useWebGL() {
 
         // program
         const program = renderer.createProgram(vertex, fragment, {
-            stageSize,
+            background: new CheckerboardTexture(stageSize, stageSize, 0xee),
         });
         const gameProgram = renderer.createProgram(vertex, gameFragment, {
             pixelSize: 1 / stageSize,
@@ -77,10 +78,13 @@ function useWebGL() {
 
         const fps = 24;
         const delay = 1000 / fps;
-        let then = 0;
+        let then = Date.now();
+        let now = then;
         let requestId: number | null = null;
 
-        const render = (now: number) => {
+        const render = () => {
+            now = Date.now();
+
             if (WebGLUtil.resizeCanvasToDisplaySize(canvas)) {
                 halfW = canvas.clientWidth / 2 / cellSize;
                 halfH = (halfW * canvas.clientHeight) / canvas.clientWidth;
@@ -114,7 +118,7 @@ function useWebGL() {
             requestId = requestAnimationFrame(render);
         };
 
-        render(then);
+        render();
 
         return function cleanup() {
             if (requestId !== null) {
