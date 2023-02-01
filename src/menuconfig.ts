@@ -11,7 +11,7 @@ import DrawingMultipleThings from './10-drawing-multiple-things';
 import SceneGraph from './11-scene-graph';
 import ThreeDGeometryLathe from './12-3d-geometry-lathe';
 import LoadOBJ from './13-load-obj';
-import WireframeModel from './14-mesh-model';
+import WireframeModel from './14-wireframe-model';
 import Textures from './15-textures';
 import MultipleViews from './16-multiple-views';
 import VisualizingTheCamera from './17-visualizing-the-camera';
