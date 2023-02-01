@@ -1,11 +1,11 @@
 import { MouseButton } from '../constants';
 import { OrthographicCamera } from '../core';
-import { Vector3 } from '../math';
+import { Matrix4, Vector3 } from '../math';
 
 export class PlanControls {
-    private static _xAxis = new Vector3();
+    private static _vector3 = new Vector3();
 
-    private static _yAxis = new Vector3();
+    private static _matrix4 = new Matrix4();
 
     public camera: OrthographicCamera;
 
@@ -26,14 +26,26 @@ export class PlanControls {
         this.camera.lookAt(camera.target);
     }
 
+    private _screenToModel(x: number, y: number) {
+        PlanControls._matrix4.copy(this.camera.projectionMatrix).multiply(this.camera.matrixWorldInverse).invert();
+        return new Vector3(x, y, 0).applyMatrix4(PlanControls._matrix4);
+    }
+
     private _onWheel = (e: WheelEvent) => {
-        const { deltaY } = e;
+        const { offsetX, offsetY, deltaY } = e;
+        const screenX = (offsetX / this.domElement.clientWidth) * 2 - 1;
+        const screenY = 1 - 2 * (offsetY / this.domElement.clientHeight);
+        const oldPosition = this._screenToModel(screenX, screenY);
+
         if (deltaY > 0) {
             this.camera.zoom *= 0.8;
         } else {
             this.camera.zoom *= 1.25;
         }
         this.camera.updateProjectionMatrix();
+
+        const newPosition = this._screenToModel(screenX, screenY);
+        this.camera.position.add(oldPosition).sub(newPosition);
     };
 
     private _onDragStart = (e: PointerEvent) => {
@@ -50,18 +62,16 @@ export class PlanControls {
         const deltaX = offsetX - this._lastPointer[0];
         const deltaY = offsetY - this._lastPointer[1];
 
-        const { position, target, matrixWorld } = this.camera;
-        PlanControls._xAxis.setFromMatrix4Column(matrixWorld, 0);
-        PlanControls._yAxis.setFromMatrix4Column(matrixWorld, 1);
-
         if (buttons & MouseButton.LEFT || buttons & MouseButton.RIGHT) {
-            const { left, right, top, bottom, zoom } = this.camera;
+            const { position, target, matrixWorld, left, right, top, bottom, zoom } = this.camera;
 
-            const vHorizontal = PlanControls._xAxis.setLength((-deltaX * (right - left)) / zoom / this.domElement.clientWidth);
-            const vVertical = PlanControls._yAxis.setLength((deltaY * (top - bottom)) / zoom / this.domElement.clientHeight);
+            PlanControls._vector3.setFromMatrix4Column(matrixWorld, 0).setLength((-deltaX * (right - left)) / zoom / this.domElement.clientWidth);
+            position.add(PlanControls._vector3);
+            target.add(PlanControls._vector3);
 
-            position.add(vHorizontal).add(vVertical);
-            target.add(vHorizontal).add(vVertical);
+            PlanControls._vector3.setFromMatrix4Column(matrixWorld, 1).setLength((deltaY * (top - bottom)) / zoom / this.domElement.clientHeight);
+            position.add(PlanControls._vector3);
+            target.add(PlanControls._vector3);
         } else if (buttons & MouseButton.MIDDLE) {
             const deltaS = (2 * deltaY) / this.domElement.clientHeight;
             this.camera.zoom *= Math.max(1 + deltaS, 0);
