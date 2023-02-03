@@ -29,8 +29,8 @@ function useWebGL() {
             const cell = Math.random() < 0.6 ? 0 : 255;
             initialData[offset + 0] = cell;
             initialData[offset + 1] = cell;
-            initialData[offset + 2] = cell;
-            initialData[offset + 3] = 255;
+            initialData[offset + 2] = 0;
+            initialData[offset + 3] = cell;
         }
 
         // camera
@@ -76,7 +76,7 @@ function useWebGL() {
         let input = 0;
         let output = 1;
 
-        const fps = 24;
+        const fps = 60;
         const delay = 1000 / fps;
         let then = Date.now();
         let now = then;
