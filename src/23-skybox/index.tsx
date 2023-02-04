@@ -60,9 +60,18 @@ function useWebGL() {
         skybox.depthFunc = 'LEQUAL';
         skybox.setParent(scene);
 
+        const rotationSpeed = Math.PI * 0.005;
+
+        let then = 0;
         let requestId: number | null = null;
 
-        const render = () => {
+        const render = (now: number) => {
+            const angle = rotationSpeed * (now - then) * 0.001;
+            then = now;
+
+            camera.position.applyAxisAngle(camera.up, angle);
+            camera.lookAt(scene.position);
+
             if (WebGLUtil.resizeCanvasToDisplaySize(canvas)) {
                 aspect = canvas.clientWidth / canvas.clientHeight;
                 camera.aspect = aspect;
@@ -78,7 +87,7 @@ function useWebGL() {
             requestId = requestAnimationFrame(render);
         };
 
-        render();
+        render(then);
 
         return function cleanup() {
             if (requestId !== null) {
