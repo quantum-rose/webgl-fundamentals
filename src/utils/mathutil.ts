@@ -14,11 +14,10 @@ export class MathUtil {
      * 阶乘
      */
     public static factorial(n: number): number {
-        const cache = MathUtil._factorialCache[n];
-        if (cache !== undefined) {
-            return cache;
+        if (MathUtil._factorialCache[n] === undefined) {
+            MathUtil._factorialCache[n] = n * MathUtil.factorial(n - 1);
         }
-        return n * MathUtil.factorial(n - 1);
+        return MathUtil._factorialCache[n];
     }
 
     /**
