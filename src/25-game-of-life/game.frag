@@ -17,6 +17,12 @@ void main() {
         texture2D(map, v_uv + vec2(1, 0) * pixelSize).r +
         texture2D(map, v_uv + vec2(1, 1) * pixelSize).r;
 
+    float isCell = color.r;
+    float roundIsTwo = float(round == 2.);
+    float roundIsThree = float(round == 3.);
+    float isCellAndRoundIsTwoOrThree = isCell * (roundIsTwo + roundIsThree);
+    float isDeadAndRoundIsThree = (1. - isCell) * roundIsThree;
+
     /**
      * 1 为真, 0 为假
      * r: 是否是细胞
@@ -24,26 +30,10 @@ void main() {
      * b: 每次新生成细胞时 +0.01
      * a: 有细胞时置为 1, 否则每次迭代 -0.02 (实现拖影效果)
      */
-    if (color.r == 1.) {
-        if (round == 2. || round == 3.) {
-            color.g = 0.;
-            color.a = 1.;
-        } else {
-            color.r = 0.;
-            color.g = 1.;
-            color.a = max(0., color.a - .02);
-        }
-    } else {
-        if (round == 3.) {
-            color.r = 1.;
-            color.g = 1.;
-            color.b = min(1., color.b + .01);
-            color.a = 1.;
-        } else {
-            color.g = 0.;
-            color.a = max(0., color.a - .02);
-        }
-    }
+    color.r = isCellAndRoundIsTwoOrThree + isDeadAndRoundIsThree;
+    color.g = float(color.r != isCell);
+    color.b = min(1., color.b + .01 * isDeadAndRoundIsThree);
+    color.a = max(0., min(1., color.a + color.r) - .02 * (1. - color.r));
 
     gl_FragColor = color;
 }
