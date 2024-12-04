@@ -13,13 +13,11 @@
 
 ::-webkit-scrollbar {
     width: 4px;
+    height: 4px;
     background-color: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-    width: 4px;
-    min-height: 32px;
-    height: 32px;
     border-radius: 4px;
     background-color: transparent;
 }
