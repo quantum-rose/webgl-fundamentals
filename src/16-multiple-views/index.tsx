@@ -161,7 +161,7 @@ export default function MultipleViews() {
             array.push(`item ${i + 1}`);
         }
         return array;
-    }, undefined);
+    }, []);
 
     return (
         <div ref={scrollContainerRef} className={style['multiple-views']}>
